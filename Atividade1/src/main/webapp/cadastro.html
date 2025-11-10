@@ -49,6 +49,30 @@
             align-items: center;
             gap: 8px;
         }
+        .checkbox {
+        display: flex;
+        align-items: center;   
+        justify-content: flex-start; 
+        gap: 8px;              
+        margin-top: 15px;      
+        width: 100%;           
+        }
+
+            .checkbox input[type="checkbox"] {
+            width: 16px;   
+            height: 16px;
+            cursor: pointer;
+            accent-color: #4b8ed3;
+            }
+
+            .checkbox label {
+            margin: 0;
+            font-weight: bold;
+            font-size: 14px;      
+            color: #34495e;
+            cursor: pointer;      
+            }
+
 
         .buttons {
             margin-top: 20px;
@@ -97,9 +121,11 @@
         </select>
 
         <div class="checkbox">
-            <input type="checkbox" id="termos" name="termos" required>
-            <label for="termos">Aceito os termos de uso do Hotel Trend</label>
-        </div>
+    <label for="termos" style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+        <input type="checkbox" id="termos" name="termos" required>
+        Aceito os termos de uso do Hotel Trend
+    </label>
+</div>
 
         <div class="buttons">
             <input type="submit" value="Enviar">
