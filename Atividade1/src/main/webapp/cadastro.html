@@ -3,44 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cadastro</title>
-</head>
-<body>
-    <div>
-        <form, style="background-color: gainsboro; border: solid blue;">
-            <!-- <fieldset>
-                <legend>Informações da Empresa</legend> -->
-                <label for="emp">Nome da Empresa:</label>
-                <input type="text", name="empresa", id="emp", placeholder="Digite o nome da Empresa", required> <br>
+    <title>Cadastro - Hotel Trend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f3f3;
+            margin: 0;
+            padding: 0;
+        }
 
-                <label for="email">Email: </label> 
-                <input type="email", name="email", id="email", placeholder="Digite o Email", required> <br>
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
 
-                <label for="senha">Senha: </label>
-                <input type="password", name="senha", id="senha", placeholder="Digite a Senha", required> <br>
-<!---
-            </fieldset> -->
-            <select name="" id="">
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-            </select> <br>
-            <input type="checkbox", name="termos", id="termos"> Aceito os termos de uso da Empresas<br>
-            <button type="submit">Enviar</button>
-
-            <button type="reset">Limpar</button>
-        </form>
-
-    </div>
-</body>
-</html>
-
-<style>
         form {
-            background-color: #f0f0f0;
-            border: 2px solid #333;
+            background-color: #ffffff;
+            border: 2px solid #a1bce3;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: 30px auto;
             padding: 20px;
-            width: 400px;
-            margin: 20px auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .checkbox {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        input[type="submit"], input[type="reset"] {
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 5px;
+            transition: 0.3s;
+        }
+
+        input[type="submit"]:hover, input[type="reset"]:hover {
+            background-color: #3b78b5;
         }
     </style>
+</head>
+<body>
+
+    <h1>Cadastro - Hotel Trend</h1>
+
+    <form action="#" method="post">
+        <label for="nome">Nome Completo:</label>
+        <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+
+        <label for="telefone">Telefone:</label>
+        <input type="tel" id="telefone" name="telefone" placeholder="(xx) xxxxx-xxxx" required>
+
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" placeholder="Crie uma senha" required>
+
+        <label for="acomodacao">Tipo de Acomodação:</label>
+        <select id="acomodacao" name="acomodacao" required>
+            <option value="">Selecione</option>
+            <option value="standard">Standard</option>
+            <option value="luxo">Luxo</option>
+            <option value="suíte">Suíte Master</option>
+        </select>
+
+        <div class="checkbox">
+            <input type="checkbox" id="termos" name="termos" required>
+            <label for="termos">Aceito os termos de uso do Hotel Trend</label>
+        </div>
+
+        <div class="buttons">
+            <input type="submit" value="Enviar">
+            <input type="reset" value="Limpar">
+        </div>
+    </form>
+
+</body>
+</html>
