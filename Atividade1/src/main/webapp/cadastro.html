@@ -8,90 +8,55 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f7f3f3;
-            margin: 0;
-            padding: 0;
         }
 
         h1 {
             text-align: center;
             color: #333;
-            margin-top: 30px;
         }
 
         form {
             background-color: #ffffff;
             border: 2px solid #a1bce3;
-            border-radius: 10px;
-            max-width: 400px;
-            margin: 30px auto;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px; /* Limita o tamanho vertical para não ocupar a tela inteira */
+            margin: 30px auto; /* Centraliza o formulário na página */
+            padding: 20px; /* Espaçamento interno */
         }
 
         label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
+            display: block; /* Faz com que o label ocupe toda a largura disponível */
+            margin-top: 10px; /* Espaçamento acima do label */
+            font-weight: bold; /* Deixa o texto em negrito */
             color: #444;
         }
 
         input, select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
+            width: 100%; /* Faz com que o input ocupe toda a largura disponível */
+            padding: 8px; /* Espaçamento interno */
+            margin-top: 5px; /* Espaçamento acima do input */
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        .checkbox {
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .checkbox {
-        display: flex;
-        align-items: center;   
-        justify-content: flex-start; 
-        gap: 8px;              
-        margin-top: 15px;      
-        width: 100%;           
+        .checkbox {              
+        margin-top: 15px; /* Espaçamento acima do checkbox */     
+        width: 100%; /* Faz com que o checkbox ocupe toda a largura disponível */          
         }
 
             .checkbox input[type="checkbox"] {
-            width: 16px;   
-            height: 16px;
-            cursor: pointer;
-            accent-color: #4b8ed3;
-            }
-
-            .checkbox label {
-            margin: 0;
-            font-weight: bold;
-            font-size: 14px;      
-            color: #34495e;
-            cursor: pointer;      
+            width: 16px; 
             }
 
 
         .buttons {
-            margin-top: 20px;
-            text-align: center;
+            margin-top: 20px; /* Espaçamento acima dos botões */
+            text-align: center; /* Centraliza os botões */
         }
 
         input[type="submit"], input[type="reset"] {
             background-color: #4b8ed3;
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            cursor: pointer;
-            margin: 5px;
-            transition: 0.3s;
-        }
-
-        input[type="submit"]:hover, input[type="reset"]:hover {
-            background-color: #3b78b5;
         }
     </style>
 </head>
@@ -121,17 +86,16 @@
         </select>
 
         <div class="checkbox">
-    <label for="termos" style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
-        <input type="checkbox" id="termos" name="termos" required>
-        Aceito os termos de uso do Hotel Trend
-    </label>
-</div>
+            <label for="termos" style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <input type="checkbox" id="termos" name="termos" required>
+            Aceito os termos de uso do Hotel Trend
+            </label>
+        </div>
 
         <div class="buttons">
             <input type="submit" value="Enviar">
             <input type="reset" value="Limpar">
         </div>
     </form>
-
 </body>
 </html>
