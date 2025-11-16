@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Hotel Trend</title>
+    <style>
+        /* [Seu CSS original] */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #4b8ed3;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        nav {
+            margin-top: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #cce0ff;
+        }
+
+        section {
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #4b8ed3;
+            border-bottom: 2px solid #4b8ed3;
+            padding-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #e8f0fb;
+        }
+
+        iframe {
+            display: block;
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+
+        footer {
+            text-align: center;
+            background-color: #4b8ed3;
+            color: white;
+            padding: 15px 0;
+            margin-top: 30px;
+        }
+
+        /* Estilos para a nova seção de busca */
+        .staff-search {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .staff-search label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .staff-search input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .staff-search button {
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .staff-search button:hover {
+             background-color: #3b78b5;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Hotel Trend</h1>
+        <nav>
+            <a href="#">Início</a>
+            <a href="#">Reservas</a>
+            <a href="#">Contato</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Sobre o Hotel</h2>
+        
+        <p id="hotelDescription">O Hotel Trend oferece conforto, elegância e uma experiência inesquecível para todos os hóspedes. 
+           Localizado no centro da cidade, contamos com suítes modernas, café da manhã incluso e atendimento 24 horas.</p>
+
+        <div class="staff-search">
+            <label for="staffId">Ver Perfil do Funcionário:</label>
+            <input type="text" id="staffId" placeholder="Digite o ID (Ex: 1001)">
+            <button type="button" id="checkStaffBtn">Buscar</button>
+        </div>
+        </section>
+
+    <section>
+        <h2>Tipos de Acomodações</h2>
+        <table border="1">
+            <tr>
+                <th>Tipo de Quarto</th>
+                <th>Preço Diário</th>
+                <th>Disponibilidade</th>
+            </tr>
+            <tr>
+                <td>Standard</td>
+                <td>R$ 250</td>
+                <td>Disponível</td>
+            </tr>
+            <tr>
+                <td>Luxo</td>
+                <td>R$ 400</td>
+                <td>Esgotado</td>
+            </tr>
+            <tr>
+                <td>Suíte Master</td>
+                <td>R$ 600</td>
+                <td>Esgotado</td>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <h2>Tour pelo Hotel</h2>
+        <iframe width="640" height="480" src="https://www.youtube.com/embed/Bw1WBruxjDE?list=RDBw1WBruxjDE" title="O Rei do Gado: relembre a abertura da novela da Globo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </section>
+
+    <footer>
+        <p>© 2025 - Hotel Trend. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Salva o conteúdo original do parágrafo
+        const descriptionParagraph = document.getElementById('hotelDescription');
+        const originalDescription = descriptionParagraph.innerHTML;
+
+        // Estrutura de dados (Array) com as "matrículas" (IDs de funcionário)
+        const staffIds = ["1001", "1002", "1003", "1004", "1005", "1006"]; // ATUALIZADO
+        
+        // Objeto com as descrições profissionais (para facilitar a busca)
+        const staffProfiles = { // ATUALIZADO
+            "1001": "<strong>Ricardo Mendes - Gerente Geral:</strong> Com 15 anos de hotelaria, Ricardo lidera nossa equipe para garantir que o Hotel Trend exceda todas as expectativas. Sua paixão é o atendimento ao cliente e a inovação.",
+            "1002": "<strong>Sofia Alves - Chefe Concierge:</strong> Nascida e criada na cidade, Sofia é a pessoa ideal para planejar seu roteiro. Ela conhece todos os segredos locais, dos melhores restaurantes aos passeios mais exclusivos.",
+            "1003": "<strong>Lucas Ferreira - Gerente de A&B:</strong> Lucas é o mestre por trás da nossa gastronomia. Ele supervisiona nosso café da manhã, o bar do lobby e o serviço de quarto, garantindo qualidade e sabor.",
+            "1004": "<strong>Mariana Costa - Diretora de Eventos:</strong> Mariana transforma ideias em realidade. Ela é responsável por todos os eventos corporativos e sociais realizados no hotel, cuidando de cada detalhe.",
+            "1005": "<strong>Pedro Martins - Chefe de Segurança:</strong> A tranquilidade dos nossos hóspedes é a prioridade de Pedro. Sua equipe monitora o hotel 24/7, garantindo um ambiente seguro e acolhedor.",
+            "1006": "<strong>Julia Nunes - Governanta Executiva:</strong> Julia comanda a equipe de limpeza e arrumação. É graças ao seu olhar atento que todos os quartos e áreas comuns estão sempre impecáveis."
+        };
+
+        // Adiciona um "ouvinte" ao botão de busca
+        document.getElementById('checkStaffBtn').addEventListener('click', function() {
+            // Pega o valor digitado no input
+            let inputId = document.getElementById('staffId').value;
+            let found = false; // Variável de controle
+
+            // Estrutura de repetição FOR para varrer o array de IDs
+            for (let i = 0; i < staffIds.length; i++) {
+                
+                // Estrutura condicional IF para comparar o ID
+                if (staffIds[i] === inputId) {
+                    // ID encontrado!
+                    let profile = staffProfiles[inputId];
+                    descriptionParagraph.innerHTML = profile; // Substitui o parágrafo
+                    found = true; // Marca como encontrado
+                    break; // Para o loop, pois já achamos
+                }
+            }
+            
+            // Estrutura condicional ELSE (parte do IF-ELSE, usando a variável 'found')
+            if (found === false) {
+                // Se o loop terminou e 'found' ainda é falso, o ID não existe
+                descriptionParagraph.innerHTML = originalDescription; // Restaura o parágrafo original
+                alert("ID de funcionário não encontrado.");
+            }
+        });
+    </script>
+    </body>
+</html>
