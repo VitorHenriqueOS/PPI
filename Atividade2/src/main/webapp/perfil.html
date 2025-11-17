@@ -194,6 +194,7 @@
         // Salva o conteúdo original do parágrafo
         const descriptionParagraph = document.getElementById('hotelDescription');
         const originalDescription = descriptionParagraph.innerHTML;
+        const staffInput = document.getElementById('staffId');
 
         // Estrutura de dados (Array) com as "matrículas" (IDs de funcionário)
         const staffIds = ["12021BCC037", "12121BCC021", "12021BCC041", "11921BCC006", "12211BCC048", "1006"]; // ATUALIZADO
@@ -209,34 +210,33 @@
         };
 
         // Adiciona um "ouvinte" ao botão de busca
-        document.getElementById('checkStaffBtn').addEventListener('click', function () {
+        document.getElementById('checkStaffBtn').addEventListener('click', function() {
             let inputId = staffInput.value;
-
+            
             // === AQUI ESTÁ O IF / ELSE PEDIDO ===
-
+            
             // IF: Valida se o campo está vazio
             if (inputId === "") {
                 alert("Por favor, digite um ID de funcionário.");
                 descriptionParagraph.innerHTML = originalDescription; // Garante que volta ao original
-            }
+            } 
             // ELSE: Se não estiver vazio, faz a busca
             else {
-                let found = false;
+                let found = false; 
 
                 // Estrutura de repetição FOR
                 for (let i = 0; i < staffIds.length; i++) {
                     if (staffIds[i] === inputId) {
                         descriptionParagraph.innerHTML = staffProfiles[inputId];
                         found = true;
-                        break;
+                        break; 
                     }
                 }
 
-                // Estrutura condicional ELSE (parte do IF-ELSE, usando a variável 'found')
+                // Verifica se NÃO encontrou (usando if/else lógico para o resultado da busca)
                 if (found === false) {
-                    // Se o loop terminou e 'found' ainda é falso, o ID não existe
-                    descriptionParagraph.innerHTML = originalDescription; // Restaura o parágrafo original
-                    alert("ID de funcionário não encontrado.");
+                    descriptionParagraph.innerHTML = originalDescription;
+                    alert("Funcionário não encontrado no sistema.");
                 }
             }
         });
