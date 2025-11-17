@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +49,7 @@
             background-color: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         section h2 {
@@ -63,7 +64,8 @@
             margin-top: 15px;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ccc;
             padding: 10px;
             text-align: center;
@@ -95,16 +97,19 @@
             border: 1px solid #eee;
             border-radius: 5px;
         }
+
         .staff-search label {
             font-weight: bold;
             margin-right: 10px;
         }
+
         .staff-search input {
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
             width: 165px;
         }
+
         .staff-search button {
             background-color: #4b8ed3;
             color: white;
@@ -114,12 +119,13 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        .staff-search button:hover {
-             background-color: #3b78b5;
-        }
 
+        .staff-search button:hover {
+            background-color: #3b78b5;
+        }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -133,16 +139,18 @@
 
     <section>
         <h2>Sobre o Hotel</h2>
-        
-        <p id="hotelDescription">O Hotel Trend oferece conforto, elegância e uma experiência inesquecível para todos os hóspedes. 
-           Localizado no centro da cidade, contamos com suítes modernas, café da manhã incluso e atendimento 24 horas.</p>
+
+        <p id="hotelDescription">O Hotel Trend oferece conforto, elegância e uma experiência inesquecível para todos os
+            hóspedes.
+            Localizado no centro da cidade, contamos com suítes modernas, café da manhã incluso e atendimento 24 horas.
+        </p>
 
         <div class="staff-search">
             <label for="staffId">Ver Perfil do Funcionário:</label>
             <input type="text" id="staffId" placeholder="Digite o ID (Ex: 12000BCC000)">
             <button type="button" id="checkStaffBtn">Buscar</button>
         </div>
-        </section>
+    </section>
 
     <section>
         <h2>Tipos de Acomodações</h2>
@@ -172,7 +180,10 @@
 
     <section>
         <h2>Tour pelo Hotel</h2>
-        <iframe width="640" height="480" src="https://www.youtube.com/embed/Bw1WBruxjDE?list=RDBw1WBruxjDE" title="O Rei do Gado: relembre a abertura da novela da Globo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <iframe width="640" height="480" src="https://www.youtube.com/embed/Bw1WBruxjDE?list=RDBw1WBruxjDE"
+            title="O Rei do Gado: relembre a abertura da novela da Globo" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </section>
 
     <footer>
@@ -186,7 +197,7 @@
 
         // Estrutura de dados (Array) com as "matrículas" (IDs de funcionário)
         const staffIds = ["12021BCC037", "12121BCC021", "12021BCC041", "11921BCC006", "12211BCC048", "1006"]; // ATUALIZADO
-        
+
         // Objeto com as descrições profissionais (para facilitar a busca)
         const staffProfiles = { // ATUALIZADO
             "12021BCC037": "<strong>Gabriel Kato Gomes - Gerente Geral:</strong> Com 15 anos de hotelaria, Gabriel lidera nossa equipe para garantir que o Hotel Trend exceda todas as expectativas. Sua paixão é o atendimento ao cliente e a inovação.",
@@ -198,31 +209,38 @@
         };
 
         // Adiciona um "ouvinte" ao botão de busca
-        document.getElementById('checkStaffBtn').addEventListener('click', function() {
-            // Pega o valor digitado no input
-            let inputId = document.getElementById('staffId').value;
-            let found = false; // Variável de controle
+        document.getElementById('checkStaffBtn').addEventListener('click', function () {
+            let inputId = staffInput.value;
 
-            // Estrutura de repetição FOR para varrer o array de IDs
-            for (let i = 0; i < staffIds.length; i++) {
-                
-                // Estrutura condicional IF para comparar o ID
-                if (staffIds[i] === inputId) {
-                    // ID encontrado!
-                    let profile = staffProfiles[inputId];
-                    descriptionParagraph.innerHTML = profile; // Substitui o parágrafo
-                    found = true; // Marca como encontrado
-                    break; // Para o loop, pois já achamos
-                }
+            // === AQUI ESTÁ O IF / ELSE PEDIDO ===
+
+            // IF: Valida se o campo está vazio
+            if (inputId === "") {
+                alert("Por favor, digite um ID de funcionário.");
+                descriptionParagraph.innerHTML = originalDescription; // Garante que volta ao original
             }
-            
-            // Estrutura condicional ELSE (parte do IF-ELSE, usando a variável 'found')
-            if (found === false) {
-                // Se o loop terminou e 'found' ainda é falso, o ID não existe
-                descriptionParagraph.innerHTML = originalDescription; // Restaura o parágrafo original
-                alert("ID de funcionário não encontrado.");
+            // ELSE: Se não estiver vazio, faz a busca
+            else {
+                let found = false;
+
+                // Estrutura de repetição FOR
+                for (let i = 0; i < staffIds.length; i++) {
+                    if (staffIds[i] === inputId) {
+                        descriptionParagraph.innerHTML = staffProfiles[inputId];
+                        found = true;
+                        break;
+                    }
+                }
+
+                // Estrutura condicional ELSE (parte do IF-ELSE, usando a variável 'found')
+                if (found === false) {
+                    // Se o loop terminou e 'found' ainda é falso, o ID não existe
+                    descriptionParagraph.innerHTML = originalDescription; // Restaura o parágrafo original
+                    alert("ID de funcionário não encontrado.");
+                }
             }
         });
     </script>
-    </body>
+</body>
+
 </html>
