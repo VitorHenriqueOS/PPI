@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciar Reserva - Hotel Trend</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f7f3f3; margin: 0; padding: 0; }
+        nav { background-color: #4b8ed3; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; text-decoration: none; font-weight: bold; margin-right: 15px; }
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { display: none; position: absolute; background-color: white; min-width: 160px; box-shadow: 0px 4px 8px rgba(0,0,0,0.2); z-index: 1; }
+        .dropdown-content a { color: #333; padding: 10px; display: block; }
+        .dropdown:hover .dropdown-content { display: block; }
+        h1, h2 { text-align: center; color: #333; margin-top: 30px; }
+        .search-box { background-color: #ffffff; border: 2px solid #a1bce3; border-radius: 10px; max-width: 900px; margin: 20px auto; padding: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: flex-end; }
+        .search-item { display: flex; flex-direction: column; }
+        .search-box label { margin-bottom: 5px; font-size: 0.9em; }
+        .search-box input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .search-box button { padding: 9px 15px; background-color: #4b8ed3; color: white; border: none; border-radius: 5px; cursor: pointer; height: 35px; }
+        table { width: 90%; margin: 20px auto; border-collapse: collapse; background-color: white; }
+        table th, table td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+        table th { background-color: #4b8ed3; color: white; }
+        table button { padding: 5px 10px; margin: 2px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-edit { background-color: #f1c40f; }
+        .btn-delete { background-color: #e74c3c; color: white; }
+        form { background-color: #ffffff; border: 2px solid #a1bce3; border-radius: 10px; max-width: 500px; margin: 30px auto; padding: 20px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        .buttons { margin-top: 20px; text-align: center; }
+        .buttons button { background-color: #4b8ed3; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div>
+        <a href="#">Hotel Trend</a>
+        <a href="Index.html">Inicio</a>
+    </div>
+    <div class="dropdown">
+        <a href="#">Cadastros</a>
+        <div class="dropdown-content">
+            <a href="Hospede.html">Hospede</a>
+            <a href="Quarto.html">Quarto</a>
+            <a href="Funcionario.html">Funcionario</a>
+            <a href="Categoria.html">Categoria</a>
+            <a href="Reserva.html">Reserva</a>
+            <a href="Limpa.html">Limpeza</a>
+        </div>
+    </div>
+</nav>
+
+<h1>Gerenciar Reservas</h1>
+
+<div class="search-box">
+    <div class="search-item">
+        <label>ID:</label>
+        <input type="number" id="searchId" placeholder="ID">
+    </div>
+    <div class="search-item">
+        <label>Data Início:</label>
+        <input type="date" id="searchData">
+    </div>
+    <div class="search-item">
+        <label>CPF Hóspede:</label>
+        <input type="text" id="searchCpf" placeholder="CPF">
+    </div>
+    <button onclick="pesquisar()">Filtrar</button>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Data Início</th>
+            <th>Data Fim</th>
+            <th>CPF Hóspede</th>
+            <th>Quarto</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody id="tabelaReserva"></tbody>
+</table>
+
+<h2 id="formTitle">Cadastrar Reserva</h2>
+
+<form id="formReserva">
+    <label>ID da Reserva (Chave)</label>
+    <input type="number" id="id" required placeholder="Digite o ID">
+
+    <label>Data Início</label>
+    <input type="date" id="dataInicio" required>
+
+    <label>Data Fim</label>
+    <input type="date" id="dataFim" required>
+
+    <label>CPF Hóspede</label>
+    <input type="text" id="cpf" required placeholder="000.000.000-00">
+
+    <label>Número do Quarto</label>
+    <input type="number" id="numero" required placeholder="Ex: 101">
+
+    <div class="buttons">
+        <button type="button" id="btnSalvar" onclick="salvar()">Cadastrar</button>
+        <button type="button" onclick="limparForm()">Limpar</button>
+    </div>
+</form>
+
+<script>
+    let editando = false;
+
+    const elId = document.getElementById("id");
+    const elDataInicio = document.getElementById("dataInicio");
+    const elDataFim = document.getElementById("dataFim");
+    const elCpf = document.getElementById("cpf");
+    const elNumero = document.getElementById("numero");
+    const elBtnSalvar = document.getElementById("btnSalvar");
+    const elFormTitle = document.getElementById("formTitle");
+
+    function pesquisar() {
+        const idBusca = document.getElementById("searchId").value;
+        const dataBusca = document.getElementById("searchData").value;
+        const cpfBusca = document.getElementById("searchCpf").value;
+
+        const params = new URLSearchParams();
+        params.append("acao", "consultar");
+        if(idBusca) params.append("id", idBusca);
+        if(dataBusca) params.append("dataInicio", dataBusca);
+        if(cpfBusca) params.append("cpf", cpfBusca);
+
+        fetch("ReservaServlet?" + params.toString())
+            .then(r => r.json())
+            .then(dados => {
+                const tbody = document.getElementById("tabelaReserva");
+                tbody.innerHTML = "";
+                if(dados.erro) { alert(dados.erro); return; }
+
+                dados.forEach(obj => {
+                    let jsonStr = JSON.stringify(obj).replace(/'/g, "&#39;");
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${obj.id}</td>
+                            <td>${obj.dataInicio}</td>
+                            <td>${obj.dataFim}</td>
+                            <td>${obj.cpf}</td>
+                            <td>${obj.numero}</td>
+                            <td>
+                                <button class="btn-edit" onclick='editar(${jsonStr})'>Editar</button>
+                                <button class="btn-delete" onclick='excluir(${obj.id})'>Excluir</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(err => console.error("Erro ao buscar:", err));
+    }
+
+    function salvar() {
+        const params = new URLSearchParams();
+        params.append("acao", editando ? "alterar" : "cadastrar");
+        params.append("id", elId.value);
+        params.append("dataInicio", elDataInicio.value);
+        params.append("dataFim", elDataFim.value);
+        params.append("cpf", elCpf.value);
+        params.append("numero", elNumero.value);
+
+        fetch("ReservaServlet", {
+            method: "POST",
+            body: params
+        }).then(response => response.json())
+          .then(data => {
+            if(data.ok) {
+                limparForm();
+                pesquisar();
+            } else {
+                alert("Erro: " + (data.erro || "Desconhecido"));
+            }
+        }).catch(err => console.error("Erro na requisição:", err));
+    }
+
+    function editar(obj) {
+        elId.value = obj.id;
+        elDataInicio.value = obj.dataInicio;
+        elDataFim.value = obj.dataFim;
+        elCpf.value = obj.cpf;
+        elNumero.value = obj.numero;
+
+        // ID é a PK, não pode mudar na edição
+        elId.disabled = true;
+        
+        editando = true;
+        elFormTitle.innerText = "Atualizar Reserva";
+        elBtnSalvar.innerText = "Atualizar";
+    }
+
+    function excluir(id) {
+        if(confirm(`Deseja cancelar a reserva de ID #${id}?`)) {
+            const params = new URLSearchParams();
+            params.append("acao", "remover");
+            params.append("id", id);
+
+            fetch("ReservaServlet", {
+                method: "POST",
+                body: params
+            }).then(r => r.json())
+              .then(data => {
+                  if(data.ok) pesquisar();
+                  else alert("Erro ao excluir: " + (data.erro));
+              });
+        }
+    }
+
+    function limparForm() {
+        elId.value = "";
+        elDataInicio.value = "";
+        elDataFim.value = "";
+        elCpf.value = "";
+        elNumero.value = "";
+        elId.disabled = false;
+        editando = false;
+        elFormTitle.innerText = "Cadastrar Reserva";
+        elBtnSalvar.innerText = "Cadastrar";
+    }
+
+    // Carregar dados ao abrir
+    window.onload = pesquisar;
+</script>
+</body>
+</html>

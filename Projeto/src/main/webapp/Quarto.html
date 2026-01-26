@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciar Quarto - Hotel Trend</title>
+
+    <style>
+        /* ================= ESTILO COPIADO DE TESTE.HTML ================= */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f3f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            background-color: #4b8ed3;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px;
+            display: block;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* ===== TITULOS ===== */
+        h1, h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        /* ===== AREA PESQUISA ===== */
+        .search-box {
+            background-color: #ffffff;
+            border: 2px solid #a1bce3;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .search-box input {
+            width: 70%;
+            padding: 8px;
+        }
+
+        .search-box button {
+            padding: 9px 15px;
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* ===== TABELA ===== */
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #4b8ed3;
+            color: white;
+        }
+
+        table button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #f1c40f;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* ===== FORM ===== */
+        form {
+            background-color: #ffffff;
+            border: 2px solid #a1bce3;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .buttons button {
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div>
+        <a href="#">Hotel Trend</a>
+        <a href="Index.html">Inicio</a>
+    </div>
+
+    <div class="dropdown">
+        <a href="#">Cadastros</a>
+        <div class="dropdown-content">
+            <a href="Hospede.html">Hospede</a>
+            <a href="Quarto.html">Quarto</a>
+            <a href="Funcionario.html">Funcionario</a>
+            <a href="Categoria.html">Categoria</a>
+            <a href="Reserva.html">Reserva</a>
+            <a href="Limpa.html">Limpeza</a>
+        </div>
+    </div>
+</nav>
+
+<h1>Gerenciar Quartos</h1>
+
+<div class="search-box">
+    <label>Pesquisar por Número:</label>
+    <input type="number" id="searchNumero" placeholder="Digite o número do quarto">
+    <button onclick="pesquisar()">Pesquisar</button>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Número</th>
+            <th>Andar</th>
+            <th>Status</th>
+            <th>ID Categoria</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody id="tabelaQuarto">
+        </tbody>
+</table>
+
+<h2 id="formTitle">Cadastrar Quarto</h2>
+
+<form id="formQuarto">
+    <label>Número (ID)</label>
+    <input type="number" id="numero" required>
+
+    <label>Andar</label>
+    <input type="number" id="andar" required>
+
+    <label>Status</label>
+    <input type="text" id="status" required placeholder="Ex: Disponível, Ocupado">
+
+    <label>ID Categoria</label>
+    <input type="number" id="idCategoria" required>
+
+    <div class="buttons">
+        <button type="button" id="btnSalvar" onclick="salvar()">Cadastrar</button>
+        <button type="button" onclick="limparForm()">Limpar</button>
+    </div>
+</form>
+
+<script>
+    let editando = false;
+
+    // Referências aos elementos do DOM
+    const elNumero = document.getElementById("numero");
+    const elAndar = document.getElementById("andar");
+    const elStatus = document.getElementById("status");
+    const elIdCategoria = document.getElementById("idCategoria");
+    
+    const elBtnSalvar = document.getElementById("btnSalvar");
+    const elFormTitle = document.getElementById("formTitle");
+    
+
+    function pesquisar() {
+        const numBusca = document.getElementById("searchNumero").value;
+
+        fetch("QuartoServlet?acao=consultar&numero=" + numBusca)
+            .then(r => r.json())
+            .then(dados => {
+                const tbody = document.getElementById("tabelaQuarto");
+                tbody.innerHTML = "";
+
+                dados.forEach(q => {
+                    // Stringify seguro para o onclick
+                    let jsonStr = JSON.stringify(q).replace(/'/g, "&#39;");
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${q.numero}</td>
+                            <td>${q.andar}</td>
+                            <td>${q.status}</td>
+                            <td>${q.idCategoria}</td>
+                            <td>
+                                <button class="btn-edit" onclick='editar(${jsonStr})'>Editar</button>
+                                <button class="btn-delete" onclick='excluir(${q.numero})'>Excluir</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(err => console.error("Erro ao buscar:", err));
+    }
+
+    function salvar() {
+        const params = new URLSearchParams();
+        params.append("acao", editando ? "alterar" : "cadastrar");
+        params.append("numero", elNumero.value);
+        params.append("andar", elAndar.value);
+        params.append("status", elStatus.value);
+        params.append("idCategoria", elIdCategoria.value);
+
+        fetch("QuartoServlet", {
+            method: "POST",
+            body: params
+        }).then(response => response.json())
+          .then(data => {
+            if(data.ok) {
+                limparForm();
+                pesquisar();
+                // Opcional: alert("Salvo com sucesso!");
+            } else {
+                alert("Erro ao salvar: " + (data.erro || "Desconhecido"));
+            }
+        }).catch(err => console.error("Erro na requisição:", err));
+    }
+
+    function editar(q) {
+        elNumero.value = q.numero;
+        elAndar.value = q.andar;
+        elStatus.value = q.status;
+        elIdCategoria.value = q.idCategoria;
+
+        elNumero.disabled = true; // Bloqueia a chave primária
+        editando = true;
+        
+        elFormTitle.innerText = "Atualizar Quarto";
+        elBtnSalvar.innerText = "Atualizar";
+    }
+
+    function excluir(numero) {
+        if(confirm("Deseja realmente excluir o quarto " + numero + "?")) {
+            const params = new URLSearchParams();
+            params.append("acao", "remover");
+            params.append("numero", numero);
+
+            fetch("QuartoServlet", {
+                method: "POST",
+                body: params
+            }).then(r => r.json())
+              .then(data => {
+                  if(data.ok) pesquisar();
+                  else alert("Erro ao excluir");
+              });
+        }
+    }
+
+    function limparForm() {
+        elNumero.value = "";
+        elAndar.value = "";
+        elStatus.value = "";
+        elIdCategoria.value = "";
+        
+        elNumero.disabled = false;
+        editando = false;
+        
+        elFormTitle.innerText = "Cadastrar Quarto";
+        elBtnSalvar.innerText = "Cadastrar";
+    }
+</script>
+
+</body>
+</html>

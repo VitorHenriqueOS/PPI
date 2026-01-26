@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciar Funcionário - Hotel Trend</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f3f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            background-color: #4b8ed3;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px;
+            display: block;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* ===== TITULOS ===== */
+        h1, h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        /* ===== AREA PESQUISA ===== */
+        .search-box {
+            background-color: #ffffff;
+            border: 2px solid #a1bce3;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .search-box input {
+            width: 70%;
+            padding: 8px;
+        }
+
+        .search-box button {
+            padding: 9px 15px;
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* ===== TABELA ===== */
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #4b8ed3;
+            color: white;
+        }
+
+        table button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #f1c40f;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* ===== FORM ===== */
+        form {
+            background-color: #ffffff;
+            border: 2px solid #a1bce3;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .buttons button {
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div>
+        <a href="#">Hotel Trend</a>
+        <a href="Index.html">Inicio</a>
+    </div>
+
+    <div class="dropdown">
+        <a href="#">Cadastros</a>
+        <div class="dropdown-content">
+            <a href="Hospede.html">Hospede</a>
+            <a href="Quarto.html">Quarto</a>
+            <a href="Funcionario.html">Funcionario</a>
+            <a href="Categoria.html">Categoria</a>
+            <a href="Reserva.html">Reserva</a>
+            <a href="Limpa.html">Limpeza</a>
+        </div>
+    </div>
+</nav>
+
+<h1>Gerenciar Funcionários</h1>
+
+<div class="search-box">
+    <label>Pesquisar por ID:</label>
+    <input type="number" id="searchId" placeholder="Digite o ID do funcionário">
+    <button onclick="pesquisar()">Pesquisar</button>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Turno</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody id="tabelaFuncionario">
+        </tbody>
+</table>
+
+<h2 id="formTitle">Cadastrar Funcionário</h2>
+
+<form id="formFuncionario">
+    <label>ID</label>
+    <input type="number" id="id" required>
+
+    <label>Nome</label>
+    <input type="text" id="nome" required placeholder="Ex: João Silva">
+
+    <label>Turno</label>
+    <input type="text" id="turno" required placeholder="Ex: Manhã, Noite">
+
+    <div class="buttons">
+        <button type="button" id="btnSalvar" onclick="salvar()">Cadastrar</button>
+        <button type="button" onclick="limparForm()">Limpar</button>
+    </div>
+</form>
+
+<script>
+    let editando = false;
+
+    // Elementos DOM
+    const elId = document.getElementById("id");
+    const elNome = document.getElementById("nome");
+    const elTurno = document.getElementById("turno");
+    
+    const elBtnSalvar = document.getElementById("btnSalvar");
+    const elFormTitle = document.getElementById("formTitle");
+    
+
+    function pesquisar() {
+        const idBusca = document.getElementById("searchId").value;
+
+        fetch("FuncionarioServlet?acao=consultar&id=" + idBusca)
+            .then(r => r.json())
+            .then(dados => {
+                const tbody = document.getElementById("tabelaFuncionario");
+                tbody.innerHTML = "";
+
+                dados.forEach(func => {
+                    // Stringify para passar o objeto para a função de editar
+                    let jsonStr = JSON.stringify(func).replace(/'/g, "&#39;");
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${func.id}</td>
+                            <td>${func.nome}</td>
+                            <td>${func.turno}</td>
+                            <td>
+                                <button class="btn-edit" onclick='editar(${jsonStr})'>Editar</button>
+                                <button class="btn-delete" onclick='excluir(${func.id})'>Excluir</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(err => console.error("Erro ao buscar:", err));
+    }
+
+    function salvar() {
+        const params = new URLSearchParams();
+        params.append("acao", editando ? "alterar" : "cadastrar");
+        params.append("id", elId.value);
+        params.append("nome", elNome.value);
+        params.append("turno", elTurno.value);
+
+        fetch("FuncionarioServlet", {
+            method: "POST",
+            body: params
+        }).then(response => response.json())
+          .then(data => {
+            if(data.ok) {
+                limparForm();
+                pesquisar();
+            } else {
+                alert("Erro ao salvar: " + (data.erro || "Desconhecido"));
+            }
+        }).catch(err => console.error("Erro na requisição:", err));
+    }
+
+    function editar(func) {
+        elId.value = func.id;
+        elNome.value = func.nome;
+        elTurno.value = func.turno;
+
+        elId.disabled = true; // Chave primária não muda na edição
+        editando = true;
+        
+        elFormTitle.innerText = "Atualizar Funcionário";
+        elBtnSalvar.innerText = "Atualizar";
+    }
+
+    function excluir(id) {
+        if(confirm("Deseja realmente excluir o funcionário ID " + id + "?")) {
+            const params = new URLSearchParams();
+            params.append("acao", "remover");
+            params.append("id", id);
+
+            fetch("FuncionarioServlet", {
+                method: "POST",
+                body: params
+            }).then(r => r.json())
+              .then(data => {
+                  if(data.ok) pesquisar();
+                  else alert("Erro ao excluir: " + (data.erro || "Erro desconhecido"));
+              });
+        }
+    }
+
+    function limparForm() {
+        elId.value = "";
+        elNome.value = "";
+        elTurno.value = "";
+        
+        elId.disabled = false;
+        editando = false;
+        
+        elFormTitle.innerText = "Cadastrar Funcionário";
+        elBtnSalvar.innerText = "Cadastrar";
+    }
+</script>
+
+</body>
+</html>

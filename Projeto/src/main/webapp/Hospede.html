@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Hospede - Hotel Trend</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f3f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            background-color: #4b8ed3;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px;
+            display: block;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* ===== TITULOS ===== */
+        h1, h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        /* ===== AREA PESQUISA ===== */
+        .search-box {
+            background-color: #ffffff;
+            border: 2px solid #a1bce3;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .search-box input {
+            width: 70%;
+            padding: 8px;
+        }
+
+        .search-box button {
+            padding: 9px 15px;
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* ===== TABELA ===== */
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #4b8ed3;
+            color: white;
+        }
+
+        table button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #f1c40f;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* ===== FORM ===== */
+        form {
+            background-color: #ffffff;
+            border: 2px solid #a1bce3;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .buttons button {
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav>
+    <div>
+        <a href="#">Hotel Trend</a>
+        <a href="Index.html">Inicio</a>
+    </div>
+
+    <div class="dropdown">
+        <a href="#">Cadastros</a>
+        <div class="dropdown-content">
+            <a href="Hospede.html">Hospede</a>
+            <a href="Quarto.html">Quarto</a>
+            <a href="Funcionario.html">Funcionario</a>
+            <a href="Categoria.html">Categoria</a>
+            <a href="Reserva.html">Reserva</a>
+            <a href="Limpa.html">Limpeza</a>
+        </div>
+    </div>
+</nav>
+
+<h1>Cadastro de Hospede</h1>
+
+<!-- ===== PESQUISA ===== -->
+<div class="search-box">
+    <label>Pesquisar por CPF:</label>
+    <input type="text" id="searchCpf" placeholder="Digite o CPF">
+    <button onclick="pesquisar()">Pesquisar</button>
+</div>
+
+<!-- ===== TABELA ===== -->
+<table>
+    <thead>
+        <tr>
+            <th>CPF</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <th>Data Nascimento</th>
+            <th>Acoes</th>
+        </tr>
+    </thead>
+    <tbody id="tabelaHospede">
+        <!-- Dados preenchidos via JS -->
+    </tbody>
+</table>
+
+<!-- ===== FORM ===== -->
+<h2 id="formTitle">Cadastrar Hospede</h2>
+
+<form id="formHospede">
+    <label>CPF</label>
+    <input type="text" id="cpf" required>
+
+    <label>Nome</label>
+    <input type="text" id="nome" required>
+
+    <label>Email</label>
+    <input type="email" id="email" required>
+
+    <label>Telefone</label>
+    <input type="text" id="telefone" required>
+
+    <label>Data de Nascimento</label>
+    <input type="date" id="data" required>
+
+    <div class="buttons">
+        <button type="button" id="btnSalvar" onclick="salvar()">Cadastrar</button>
+        <button type="button" onclick="limparForm()">Limpar</button>
+    </div>
+</form>
+
+<script>
+    let editando = false;
+
+    // Referências aos elementos do DOM para evitar erros
+    const elCpf = document.getElementById("cpf");
+    const elNome = document.getElementById("nome");
+    const elEmail = document.getElementById("email");
+    const elTelefone = document.getElementById("telefone");
+    const elData = document.getElementById("data");
+    const elBtnSalvar = document.getElementById("btnSalvar");
+    const elFormTitle = document.getElementById("formTitle"); // ID corrigido
+    
+    function pesquisar() {
+        const cpfBusca = document.getElementById("searchCpf").value;
+
+        // Adicionei tratamento de erro no fetch
+        fetch("HospedeServlet?acao=consultar&cpf=" + cpfBusca)
+            .then(r => r.json())
+            .then(dados => {
+                // CORREÇÃO AQUI: ID correto da tabela
+                const tbody = document.getElementById("tabelaHospede");
+                tbody.innerHTML = "";
+
+                dados.forEach(h => {
+                    // Substituímos aspas simples no JSON para evitar quebrar o HTML
+                    let jsonStr = JSON.stringify(h).replace(/'/g, "&#39;");
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${h.cpf}</td>
+                            <td>${h.nome}</td>
+                            <td>${h.email}</td>
+                            <td>${h.telefone}</td>
+                            <td>${h.data}</td>
+                            <td>
+                                <button class="btn-edit" onclick='editar(${jsonStr})'>Editar</button>
+                                <button class="btn-delete" onclick='excluir("${h.cpf}")'>Excluir</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(err => console.error("Erro ao buscar:", err));
+    }
+
+    function salvar() {
+        const params = new URLSearchParams();
+        params.append("acao", editando ? "alterar" : "cadastrar");
+        params.append("cpf", elCpf.value);
+        params.append("nome", elNome.value);
+        params.append("email", elEmail.value);
+        params.append("telefone", elTelefone.value);
+        params.append("dataNascimento", elData.value);
+
+        fetch("HospedeServlet", {
+            method: "POST",
+            body: params
+        }).then(response => response.json()) // Espera a resposta JSON do servlet
+          .then(data => {
+            if(data.ok) {
+                limparForm(); // Chama a função com o nome correto
+                pesquisar();
+            } else {
+                alert("Erro ao salvar");
+            }
+        });
+    }
+
+    function editar(h) {
+        elCpf.value = h.cpf;
+        elNome.value = h.nome;
+        elEmail.value = h.email;
+        elTelefone.value = h.telefone;
+        
+        // Conversão simples de data se necessário (depende do formato do banco)
+        // Se vier yyyy-MM-dd funciona direto
+        elData.value = h.data; 
+
+        elCpf.disabled = true; // Bloqueia o CPF na edição
+        editando = true;
+        
+        elFormTitle.innerText = "Atualizar Hospede";
+        elBtnSalvar.innerText = "Atualizar";
+    }
+
+    function excluir(cpf) {
+        if(confirm("Deseja realmente excluir este hóspede?")) {
+            fetch("HospedeServlet?acao=remover&cpf=" + cpf)
+                .then(() => pesquisar());
+        }
+    }
+
+    // CORREÇÃO: Renomeado de limpar() para limparForm() para bater com o HTML
+    function limparForm() {
+        elCpf.value = "";
+        elNome.value = "";
+        elEmail.value = "";
+        elTelefone.value = "";
+        elData.value = "";
+        
+        elCpf.disabled = false;
+        editando = false;
+        
+        elFormTitle.innerText = "Cadastrar Hospede";
+        elBtnSalvar.innerText = "Cadastrar";
+    }
+</script>
+
+</body>
+</html>

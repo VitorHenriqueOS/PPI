@@ -1,0 +1,63 @@
+CREATE TABLE Hospede
+(
+  Cpf VARCHAR(11) NOT NULL,
+  Nome VARCHAR(50) NOT NULL,
+  Email VARCHAR(50) NOT NULL,
+  Telefone VARCHAR(12) NOT NULL,
+  Data_nascimento DATE NOT NULL,
+  PRIMARY KEY (Cpf)
+);
+
+CREATE TABLE Categoria
+(
+  ID INT NOT NULL,
+  preco NUMERIC(6,2) NOT NULL,
+  nome VARCHAR(30) NOT NULL,
+  capacidade INT NOT NULL,
+  tipo_cama VARCHAR(20) NOT NULL,
+  PRIMARY KEY (ID)
+);
+
+CREATE TABLE Funcionario
+(
+  ID INT NOT NULL,
+  Nome VARCHAR(50) NOT NULL,
+  Turno VARCHAR(20) NOT NULL,
+  PRIMARY KEY (ID)
+);
+
+CREATE TABLE Quarto
+(
+  Numero INT NOT NULL,
+  andar INT NOT NULL,
+  status VARCHAR(30) NOT NULL,
+  ID INT NOT NULL,
+  PRIMARY KEY (Numero),
+  FOREIGN KEY (ID) REFERENCES Categoria(ID)
+);
+
+CREATE TABLE Reserva
+(
+  dataInicio DATE NOT NULL,
+  datafim DATE NOT NULL,
+  ID INT NOT NULL,
+  Cpf VARCHAR(11) NOT NULL,
+  Numero INT NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (Cpf) REFERENCES Hospede(Cpf),
+  FOREIGN KEY (Numero) REFERENCES Quarto(Numero),
+  UNIQUE (Cpf, Numero)
+);
+
+CREATE TABLE Limpa
+(
+  data DATE NOT NULL,
+  obs VARCHAR(60) NOT NULL,
+  ID INT NOT NULL,
+  Numero INT NOT NULL,
+  IDF INT NOT NULL,
+  PRIMARY KEY (ID),
+  FOREIGN KEY (Numero) REFERENCES Quarto(Numero),
+  FOREIGN KEY (IDF) REFERENCES Funcionario(ID),
+  UNIQUE (Numero, IDF)
+);
