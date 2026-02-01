@@ -17,6 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 public class HospedeServlet extends HttpServlet {
 
     @Override
+    public void init() {
+        System.out.println("Servlet iniciado!");
+    }
+
+    @Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -104,5 +109,9 @@ public class HospedeServlet extends HttpServlet {
             out.print("{\"erro\":\"" + e.getMessage().replace("\"", "") + "\"}");
             e.printStackTrace();
         }
+    }
+    @Override
+    public void destroy() {
+        System.out.println("Servlet finalizado!");
     }
 }
