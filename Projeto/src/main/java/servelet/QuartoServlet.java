@@ -16,6 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 public class QuartoServlet extends HttpServlet {
 
     @Override
+    public void init() {
+        System.out.println("Servlet iniciado!");
+    }
+
+    @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
@@ -113,5 +118,9 @@ public class QuartoServlet extends HttpServlet {
             out.print("{\"erro\":\"" + msgErro + "\"}");
             e.printStackTrace();
         }
+    }
+    @Override
+    public void destroy() {
+        System.out.println("Servlet finalizado!");
     }
 }
