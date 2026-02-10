@@ -255,7 +255,6 @@
                 tbody.innerHTML = "";
 
                 dados.forEach(h => {
-                    // Substituímos aspas simples no JSON para evitar quebrar o HTML
                     let jsonStr = JSON.stringify(h).replace(/'/g, "&#39;");
                     
                     tbody.innerHTML += `

@@ -45,8 +45,7 @@ CREATE TABLE Reserva
   Numero INT NOT NULL,
   PRIMARY KEY (ID),
   FOREIGN KEY (Cpf) REFERENCES Hospede(Cpf),
-  FOREIGN KEY (Numero) REFERENCES Quarto(Numero),
-  UNIQUE (Cpf, Numero)
+  FOREIGN KEY (Numero) REFERENCES Quarto(Numero)
 );
 
 CREATE TABLE Limpa
@@ -58,6 +57,5 @@ CREATE TABLE Limpa
   IDF INT NOT NULL,
   PRIMARY KEY (ID),
   FOREIGN KEY (Numero) REFERENCES Quarto(Numero),
-  FOREIGN KEY (IDF) REFERENCES Funcionario(ID),
-  UNIQUE (Numero, IDF)
+  FOREIGN KEY (IDF) REFERENCES Funcionario(ID)
 );

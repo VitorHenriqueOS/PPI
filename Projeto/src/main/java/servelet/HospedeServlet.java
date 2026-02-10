@@ -72,7 +72,7 @@ public class HospedeServlet extends HttpServlet {
                     json.append("\"nome\":\"").append(rs.getString("Nome")).append("\",");
                     json.append("\"email\":\"").append(rs.getString("Email")).append("\",");
                     json.append("\"telefone\":\"").append(rs.getString("Telefone")).append("\",");
-                    json.append("\"data\":\"").append(rs.getDate("Data_nascimento")).append("\"");
+                    json.append("\"data\":\"").append(rs.getString("Data_nascimento")).append("\"");
                     json.append("}");
                 }
 
@@ -91,6 +91,7 @@ public class HospedeServlet extends HttpServlet {
                 ps.setDate(4, Date.valueOf(request.getParameter("dataNascimento")));
                 ps.setString(5, request.getParameter("cpf"));
 
+                
                 ps.executeUpdate();
                 out.print("{\"ok\":true}");
 
