@@ -1,0 +1,168 @@
+body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f3f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            background-color: #4b8ed3;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px;
+            display: block;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* ===== TITULOS ===== */
+        h1, h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        /* ===== AREA PESQUISA ===== */
+        .search-box {
+            background-color: #ffffff;
+            border: 2px solid #a1bce3;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .search-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-box label {
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .search-box input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .search-box button {
+            padding: 9px 15px;
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            height: 35px;
+        }
+
+        /* ===== TABELA ===== */
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #4b8ed3;
+            color: white;
+        }
+
+        table button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #f1c40f;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        /* ===== FORM ===== */
+        form {
+            background-color: #ffffff;
+            border: 2px solid #a1bce3;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .buttons button {
+            background-color: #4b8ed3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+        }

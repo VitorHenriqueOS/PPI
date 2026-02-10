@@ -3,177 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gerenciar Limpeza - Hotel Trend</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f3f3;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* ===== NAVBAR ===== */
-        nav {
-            background-color: #4b8ed3;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            margin-right: 15px;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            min-width: 160px;
-            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            color: #333;
-            padding: 10px;
-            display: block;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        /* ===== TITULOS ===== */
-        h1, h2 {
-            text-align: center;
-            color: #333;
-            margin-top: 30px;
-        }
-
-        /* ===== AREA PESQUISA ===== */
-        .search-box {
-            background-color: #ffffff;
-            border: 2px solid #a1bce3;
-            border-radius: 10px;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-end;
-        }
-
-        .search-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .search-box label {
-            margin-bottom: 5px;
-            font-size: 0.9em;
-        }
-
-        .search-box input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .search-box button {
-            padding: 9px 15px;
-            background-color: #4b8ed3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            height: 35px;
-        }
-
-        /* ===== TABELA ===== */
-        table {
-            width: 90%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background-color: white;
-        }
-
-        table th, table td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-
-        table th {
-            background-color: #4b8ed3;
-            color: white;
-        }
-
-        table button {
-            padding: 5px 10px;
-            margin: 2px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-edit {
-            background-color: #f1c40f;
-        }
-
-        .btn-delete {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        /* ===== FORM ===== */
-        form {
-            background-color: #ffffff;
-            border: 2px solid #a1bce3;
-            border-radius: 10px;
-            max-width: 500px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            box-sizing: border-box;
-        }
-
-        .buttons {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .buttons button {
-            background-color: #4b8ed3;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin: 5px;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -218,6 +48,7 @@
 <table>
     <thead>
         <tr>
+        	<th>ID</th>
             <th>Data</th>
             <th>Quarto</th>
             <th>Func. ID</th>
@@ -232,6 +63,9 @@
 <h2 id="formTitle">Cadastrar Limpeza</h2>
 
 <form id="formLimpa">
+	<label>ID</label>
+    <input type="number" id="idLimpa" required>
+    
     <label>Data</label>
     <input type="date" id="data" required>
 
@@ -253,7 +87,7 @@
 <script>
     let editando = false;
 
-    // Referências aos elementos do DOM
+    const elIdLimpa = document.getElementById("idLimpa");
     const elData = document.getElementById("data");
     const elNumero = document.getElementById("numero");
     const elIdFuncionario = document.getElementById("idFuncionario");
@@ -286,21 +120,19 @@
                 }
 
                 dados.forEach(obj => {
-                    // Stringify seguro para o onclick
                     let jsonStr = JSON.stringify(obj).replace(/'/g, "&#39;");
                     
-                    // Formata data visualmente (opcional)
-                    // let dataFormatada = obj.data.split('-').reverse().join('/'); 
-
+                    // CORREÇÃO: Botão Excluir agora passa apenas o ID
                     tbody.innerHTML += `
                         <tr>
+                            <td>${obj.idLimpa}</td>
                             <td>${obj.data}</td>
                             <td>${obj.numero}</td>
                             <td>${obj.idFuncionario}</td>
                             <td>${obj.obs}</td>
                             <td>
                                 <button class="btn-edit" onclick='editar(${jsonStr})'>Editar</button>
-                                <button class="btn-delete" onclick='excluir("${obj.data}", ${obj.numero}, ${obj.idFuncionario})'>Excluir</button>
+                                <button class="btn-delete" onclick='excluir(${obj.idLimpa})'>Excluir</button>
                             </td>
                         </tr>
                     `;
@@ -312,6 +144,8 @@
     function salvar() {
         const params = new URLSearchParams();
         params.append("acao", editando ? "alterar" : "cadastrar");
+        
+        params.append("idLimpa", elIdLimpa.value); 
         params.append("data", elData.value);
         params.append("numero", elNumero.value);
         params.append("idFuncionario", elIdFuncionario.value);
@@ -325,6 +159,7 @@
             if(data.ok) {
                 limparForm();
                 pesquisar();
+                alert("Operação realizada com sucesso!");
             } else {
                 alert("Atenção: " + (data.erro || "Desconhecido"));
             }
@@ -332,13 +167,17 @@
     }
 
     function editar(obj) {
+    	elIdLimpa.value = obj.idLimpa;
         elData.value = obj.data;
         elNumero.value = obj.numero;
         elIdFuncionario.value = obj.idFuncionario;
         elObs.value = obj.obs;
 
-        // Ao editar, bloqueamos a chave composta (Data, Quarto, Func), 
-        // pois mudar a chave implicaria em criar um novo registro logicamente.
+        elIdLimpa.disabled = true;
+        // Na lógica original, você bloqueava esses campos. 
+        // Se quiser permitir mudar data/quarto na edição, remova as linhas abaixo.
+        // Se mantiver disabled, o backend manterá os dados antigos ou precisará habilitar antes de enviar.
+        // Para garantir o envio correto, vamos manter disabled VISUALMENTE, mas o .value ainda é lido.
         elData.disabled = true;
         elNumero.disabled = true;
         elIdFuncionario.disabled = true;
@@ -348,13 +187,12 @@
         elBtnSalvar.innerText = "Atualizar";
     }
 
-    function excluir(data, numero, idFunc) {
-        if(confirm(`Deseja remover o registro do quarto ${numero} na data ${data}?`)) {
+    // CORREÇÃO: Função excluir agora recebe apenas o ID (Chave Primária)
+    function excluir(id) {
+        if(confirm(`Deseja realmente remover o registro ID ${id}?`)) {
             const params = new URLSearchParams();
             params.append("acao", "remover");
-            params.append("data", data);
-            params.append("numero", numero);
-            params.append("idFuncionario", idFunc);
+            params.append("idLimpa", id); // Envia ID para o Servlet
 
             fetch("LimpaServlet", {
                 method: "POST",
@@ -368,11 +206,13 @@
     }
 
     function limparForm() {
+        elIdLimpa.value = ""; 
         elData.value = "";
         elNumero.value = "";
         elIdFuncionario.value = "";
         elObs.value = "";
         
+        elIdLimpa.disabled = false; 
         elData.disabled = false;
         elNumero.disabled = false;
         elIdFuncionario.disabled = false;

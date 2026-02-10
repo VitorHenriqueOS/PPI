@@ -177,4 +177,8 @@ public class ReservaServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
+    @Override
+    public void destroy() {
+        System.out.println("Servlet finalizado!");
+    }
 }

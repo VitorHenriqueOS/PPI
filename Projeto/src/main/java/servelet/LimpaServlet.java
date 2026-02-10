@@ -33,12 +33,13 @@ public class LimpaServlet extends HttpServlet {
             
             /* ================= CADASTRAR ================= */
             if ("cadastrar".equals(acao)) {
-                String sql = "INSERT INTO Limpa (data, obs, Numero, ID) VALUES (?, ?, ?, ?)";
+                String sql = "INSERT INTO Limpa (ID, data, obs, Numero, IDF) VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setDate(1, Date.valueOf(request.getParameter("data")));
-                ps.setString(2, request.getParameter("obs"));
-                ps.setInt(3, Integer.parseInt(request.getParameter("numero")));
-                ps.setInt(4, Integer.parseInt(request.getParameter("idFuncionario")));
+                ps.setInt(1, Integer.parseInt(request.getParameter("idLimpa")));
+                ps.setDate(2, Date.valueOf(request.getParameter("data")));
+                ps.setString(3, request.getParameter("obs"));
+                ps.setInt(4, Integer.parseInt(request.getParameter("numero")));
+                ps.setInt(5, Integer.parseInt(request.getParameter("idFuncionario")));
                 
                 ps.executeUpdate();
                 out.print("{\"ok\":true}");
@@ -58,7 +59,7 @@ public class LimpaServlet extends HttpServlet {
                     sqlBuilder.append(" AND Numero = ?");
                 }
                 if (idFuncStr != null && !idFuncStr.trim().isEmpty()) {
-                    sqlBuilder.append(" AND ID = ?");
+                    sqlBuilder.append(" AND IDF = ?");
                 }
                 
                 PreparedStatement ps = conn.prepareStatement(sqlBuilder.toString());
@@ -85,12 +86,14 @@ public class LimpaServlet extends HttpServlet {
                     primeiro = false;
                     
                     json.append("{");
+                    json.append("\"idLimpa\":").append(rs.getInt("ID")).append(",");
                     json.append("\"data\":\"").append(rs.getDate("data")).append("\",");
-                    // Tratamento para evitar que aspas na observação quebrem o JSON
+                    
                     String obs = rs.getString("obs") != null ? rs.getString("obs").replace("\"", "'") : "";
                     json.append("\"obs\":\"").append(obs).append("\",");
+                    
                     json.append("\"numero\":").append(rs.getInt("Numero")).append(",");
-                    json.append("\"idFuncionario\":").append(rs.getInt("ID"));
+                    json.append("\"idFuncionario\":").append(rs.getInt("IDF"));
                     json.append("}");
                 }
                 
@@ -99,25 +102,32 @@ public class LimpaServlet extends HttpServlet {
 
             /* ================= ALTERAR ================= */
             } else if ("alterar".equals(acao)) {
-                // Atualiza a OBS baseado na chave composta (Data + Quarto + Funcionario)
-                String sql = "UPDATE Limpa SET obs = ? WHERE data = ? AND Numero = ? AND ID = ?";
+                // CORREÇÃO: Usando ID na cláusula WHERE
+                String sql = "UPDATE Limpa SET obs = ?, data = ?, Numero = ?, IDF = ? WHERE ID = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
+                
+                // Obs é o primeiro parâmetro
                 ps.setString(1, request.getParameter("obs"));
+                
+                // Atualiza também os outros campos caso tenham sido liberados no front, 
+                // mas o mais importante é o WHERE ID no final
                 ps.setDate(2, Date.valueOf(request.getParameter("data")));
                 ps.setInt(3, Integer.parseInt(request.getParameter("numero")));
                 ps.setInt(4, Integer.parseInt(request.getParameter("idFuncionario")));
                 
+                // O ID é usado para identificar qual linha alterar
+                ps.setInt(5, Integer.parseInt(request.getParameter("idLimpa")));
+                
                 int rows = ps.executeUpdate();
                 if(rows > 0) out.print("{\"ok\":true}");
-                else out.print("{\"erro\":\"Registro não encontrado para alteração.\"}");
+                else out.print("{\"erro\":\"Registro não encontrado para alteração (ID incorreto).\"}");
                     
             /* ================= REMOVER ================= */
             } else if ("remover".equals(acao)) {
-                String sql = "DELETE FROM Limpa WHERE data = ? AND Numero = ? AND ID = ?";
+                // CORREÇÃO: Usando ID na cláusula WHERE (muito mais seguro)
+                String sql = "DELETE FROM Limpa WHERE ID = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setDate(1, Date.valueOf(request.getParameter("data")));
-                ps.setInt(2, Integer.parseInt(request.getParameter("numero")));
-                ps.setInt(3, Integer.parseInt(request.getParameter("idFuncionario")));
+                ps.setInt(1, Integer.parseInt(request.getParameter("idLimpa")));
                 
                 int rows = ps.executeUpdate();
                 if(rows > 0) out.print("{\"ok\":true}");
@@ -126,18 +136,15 @@ public class LimpaServlet extends HttpServlet {
             
         } catch (Exception e) {
             String msgErro = e.getMessage();
-            
-            // Tratamento de mensagens amigáveis
             if (msgErro != null) {
                 if (msgErro.contains("foreign key")) {
                     msgErro = "Não foi possível realizar a operação: Verifique se o Quarto e o Funcionário existem.";
                 } else if (msgErro.contains("Duplicate entry") || msgErro.contains("PRIMARY")) {
-                    msgErro = "Já existe um registro de limpeza para este Quarto, Funcionário e Data.";
+                    msgErro = "Já existe um registro com este ID.";
                 }
                 msgErro = msgErro.replace("\"", "'");
             }
-            
-            out.print("{\"erro\":\"" + msgErro + "\"}");
+            out.print("{\"erro\":\"" + (msgErro != null ? msgErro : "Erro interno") + "\"}");
             e.printStackTrace();
         }
     }
