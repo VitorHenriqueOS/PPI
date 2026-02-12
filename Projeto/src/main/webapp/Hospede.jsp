@@ -229,4 +229,5 @@
     }
 </script>
 </body>
+<jsp:include page="componentes/footer.jsp" />
 </html>

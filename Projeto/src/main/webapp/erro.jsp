@@ -76,8 +76,7 @@
             </p>
 
             <a href="javascript:history.back()" class="btn-voltar">Voltar e Tentar Novamente</a>
-            <br><br>
-            <a href="Index.jsp" style="color: #721c24; font-size: 0.9em;">Ir para a Página Inicial</a>
+            
         </div>
     </div>
 

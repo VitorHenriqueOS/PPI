@@ -42,15 +42,16 @@
         <p>Use o menu acima ou os links abaixo para navegar:</p>
 
         <ul>
-            <li><a class="botao-menu" href="Categoria.html">Cadastro de Categoria</a></li>
-            <li><a class="botao-menu" href="Funcionario.html">Cadastro de Funcionário</a></li>
-            <li><a class="botao-menu" href="HospedeServlet?acao=listar">Cadastro de Hóspede</a></li>
-            <li><a class="botao-menu" href="Limpa.html">Gerenciamento de Limpeza</a></li>
-            <li><a class="botao-menu" href="Quarto.html">Cadastro de Quarto</a></li>
-            <li><a class="botao-menu" href="Reserva.html">Gerenciamento de Reserva</a></li>
+            <li><a class="botao-menu" href="Categoria.jsp">Cadastro de Categoria</a></li>
+            <li><a class="botao-menu" href="Funcionario.jsp">Cadastro de Funcionário</a></li>
+            <li><a class="botao-menu" href="Hospede.jsp">Cadastro de Hóspede</a></li>
+            <li><a class="botao-menu" href="Limpa.jsp">Gerenciamento de Limpeza</a></li>
+            <li><a class="botao-menu" href="Quarto.jsp">Cadastro de Quarto</a></li>
+            <li><a class="botao-menu" href="Reserva.jsp">Gerenciamento de Reserva</a></li>
         </ul>
     </div>
 
 
 </body>
+<jsp:include page="componentes/footer.jsp" />
 </html>

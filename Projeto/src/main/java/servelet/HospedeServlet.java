@@ -64,7 +64,8 @@ public class HospedeServlet extends HttpServlet {
                     lista.add(h);
                 }
                 if (lista.isEmpty()) {
-                    aviso = "Nenhum hóspede encontrado com o CPF: " + buscaCpf;
+                	request.setAttribute("erro", "Nenhum hóspede encontrado com o CPF: " + buscaCpf);
+                    request.getRequestDispatcher("erro.jsp").forward(request, response);
                 }
             } else {
                 sql = "SELECT * FROM Hospede";
@@ -81,8 +82,8 @@ public class HospedeServlet extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            erro = "Erro de conexão: " + e.getMessage();
-            e.printStackTrace();
+        	request.setAttribute("erro", "Erro de conexão: " + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
         }
         
         request.setAttribute("listaHospedes", lista);
@@ -131,13 +132,17 @@ public class HospedeServlet extends HttpServlet {
                     } else {
                         // Arquivos
                         fileItems.add(item);
+                        
                     }
                 }
             } else {
-                // Se não for multipart (ex: delete via form simples se houvesse), lê normal
-                // Mas como o JSP foi alterado para multipart, vamos focar na lógica acima.
-                // Para manter compatibilidade com outras chamadas, poderíamos ler request.getParameter aqui.
-                // Mas vamos assumir o fluxo multipart.
+            	formFields.put("acao", request.getParameter("acao"));
+                formFields.put("cpf", request.getParameter("cpf"));
+                formFields.put("nome", request.getParameter("nome"));
+                formFields.put("email", request.getParameter("email"));
+                formFields.put("telefone", request.getParameter("telefone"));
+                formFields.put("dataNascimento", request.getParameter("dataNascimento"));
+                formFields.put("cpfOriginal", request.getParameter("cpfOriginal"));
             }
 
             // Recupera os dados do Map
@@ -206,10 +211,10 @@ public class HospedeServlet extends HttpServlet {
                     }
                 }
             }
-            
+        // Trata um Exception qualquer, mudar para tratar uma sqlException
         } catch (Exception e) {
-            e.printStackTrace();
-            msgErro = "Ocorreu um erro: " + e.getMessage();
+        	request.setAttribute("erro", "Ocorreu um erro: " + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
         }
 
         request.setAttribute("msgSucesso", msgSucesso);
