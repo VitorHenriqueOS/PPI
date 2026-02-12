@@ -1,11 +1,15 @@
 package servelet;
 
 import db.Conector;
+import model.Categoria;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,114 +18,118 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/CategoriaServlet")
 public class CategoriaServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     @Override
-    public void init() {
-        System.out.println("Servlet iniciado!");
-    }
-
-    @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        response.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        String acao = request.getParameter("acao");
-
+        String buscaId = request.getParameter("buscaId");
+        List<Categoria> lista = new ArrayList<>();
+        
         try (Connection conn = new Conector().getConexao()) {
+            String sql;
+            PreparedStatement ps;
             
-            /* ================= CADASTRAR ================= */
-            if ("cadastrar".equals(acao)) {
-                String sql = "INSERT INTO Categoria (ID, preco, nome, capacidade, tipo_cama) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setInt(1, Integer.parseInt(request.getParameter("id")));
-                ps.setDouble(2, Double.parseDouble(request.getParameter("preco")));
-                ps.setString(3, request.getParameter("nome"));
-                ps.setInt(4, Integer.parseInt(request.getParameter("capacidade")));
-                ps.setString(5, request.getParameter("tipo_cama"));
-                
-                ps.executeUpdate();
-                out.print("{\"ok\":true}");
-                
-            /* ================= CONSULTAR ================= */
-            } else if ("consultar".equals(acao)) {
-                String idStr = request.getParameter("id");
-                String sql;
-                PreparedStatement ps;
+            if (buscaId != null && !buscaId.trim().isEmpty()) {
+                sql = "SELECT * FROM Categoria WHERE ID = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, Integer.parseInt(buscaId));
+            } else {
+                sql = "SELECT * FROM Categoria";
+                ps = conn.prepareStatement(sql);
+            }
 
-                if (idStr == null || idStr.trim().isEmpty()) {
-                    sql = "SELECT * FROM Categoria";
-                    ps = conn.prepareStatement(sql);
-                } else {
-                    sql = "SELECT * FROM Categoria WHERE ID = ?";
-                    ps = conn.prepareStatement(sql);
-                    ps.setInt(1, Integer.parseInt(idStr));
-                }
-
-                ResultSet rs = ps.executeQuery();
-                
-                StringBuilder json = new StringBuilder();
-                json.append("[");
-                
-                boolean primeiro = true;
-                while (rs.next()) {
-                    if (!primeiro) json.append(",");
-                    primeiro = false;
-                    
-                    json.append("{");
-                    json.append("\"id\":").append(rs.getInt("ID")).append(",");
-                    json.append("\"nome\":\"").append(rs.getString("nome")).append("\",");
-                    json.append("\"preco\":").append(rs.getDouble("preco")).append(",");
-                    json.append("\"capacidade\":").append(rs.getInt("capacidade")).append(",");
-                    json.append("\"tipo_cama\":\"").append(rs.getString("tipo_cama")).append("\"");
-                    json.append("}");
-                }
-                
-                json.append("]");
-                out.print(json.toString());
-
-            /* ================= ALTERAR ================= */
-            } else if ("alterar".equals(acao)) {
-                
-                String sql = "UPDATE Categoria SET preco = ?, nome = ?, capacidade = ?, tipo_cama = ? WHERE ID = ?";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setDouble(1, Double.parseDouble(request.getParameter("preco")));
-                ps.setString(2, request.getParameter("nome"));
-                ps.setInt(3, Integer.parseInt(request.getParameter("capacidade")));
-                ps.setString(4, request.getParameter("tipo_cama"));
-                ps.setInt(5, Integer.parseInt(request.getParameter("id")));
-                
-                ps.executeUpdate();
-                out.print("{\"ok\":true}");
-                    
-            /* ================= REMOVER ================= */
-            } else if ("remover".equals(acao)) {
-                String sql = "DELETE FROM Categoria WHERE ID = ?";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setInt(1, Integer.parseInt(request.getParameter("id")));
-                
-                ps.executeUpdate();
-                out.print("{\"ok\":true}");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Categoria c = new Categoria();
+                c.setId(rs.getInt("ID"));
+                c.setPreco(rs.getBigDecimal("preco"));
+                c.setNome(rs.getString("nome"));
+                c.setCapacidade(rs.getInt("capacidade"));
+                c.setTipoCama(rs.getString("tipo_cama"));
+                lista.add(c);
+            }
+            
+            if (buscaId != null && !buscaId.isEmpty() && lista.isEmpty()) {
+                request.setAttribute("erro", "Nenhuma categoria encontrada com o ID: " + buscaId);
+                request.getRequestDispatcher("erro.jsp").forward(request, response);
+                return;
             }
             
         } catch (Exception e) {
-            String msgErro = e.getMessage();
-            
-            // Tratamento básico de erro de Foreign Key
-            if (msgErro != null && msgErro.contains("foreign key constraint fails")) {
-                msgErro = "Não é possível excluir: Existem quartos vinculados a esta categoria.";
-            }
-            
-            if (msgErro != null) {
-                msgErro = msgErro.replace("\"", "'");
-            }
-            
-            out.print("{\"erro\":\"" + msgErro + "\"}");
-            e.printStackTrace();
+            request.setAttribute("erro", "Erro de conexão: " + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+            return;
         }
+        
+        request.setAttribute("listaCategorias", lista);
+        RequestDispatcher rd = request.getRequestDispatcher("/Categoria.jsp");
+        rd.forward(request, response);
     }
+
     @Override
-    public void destroy() {
-        System.out.println("Servlet finalizado!");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        request.setCharacterEncoding("UTF-8");
+        
+        String acao = request.getParameter("acao");
+        String idStr = request.getParameter("id");
+        String nome = request.getParameter("nome");
+        String precoStr = request.getParameter("preco");
+        String capacidadeStr = request.getParameter("capacidade");
+        String tipoCama = request.getParameter("tipoCama");
+        
+        String msgSucesso = null;
+
+        try (Connection conn = new Conector().getConexao()) {
+            
+            if ("remover".equals(acao)) {
+                String sql = "DELETE FROM Categoria WHERE ID = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setInt(1, Integer.parseInt(idStr));
+                ps.executeUpdate();
+                msgSucesso = "Categoria removida com sucesso!";
+                
+            } else {
+                if (idStr == null || idStr.isEmpty()) throw new Exception("ID é obrigatório.");
+                
+                int id = Integer.parseInt(idStr);
+                BigDecimal preco = (precoStr != null) ? new BigDecimal(precoStr) : BigDecimal.ZERO;
+                int capacidade = (capacidadeStr != null) ? Integer.parseInt(capacidadeStr) : 0;
+
+                if ("cadastrar".equals(acao)) {
+                    String sql = "INSERT INTO Categoria (ID, preco, nome, capacidade, tipo_cama) VALUES (?, ?, ?, ?, ?)";
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setInt(1, id);
+                    ps.setBigDecimal(2, preco);
+                    ps.setString(3, nome);
+                    ps.setInt(4, capacidade);
+                    ps.setString(5, tipoCama);
+                    ps.executeUpdate();
+                    msgSucesso = "Categoria cadastrada com sucesso!";
+                    
+                } else if ("alterar".equals(acao)) {
+                    String sql = "UPDATE Categoria SET preco = ?, nome = ?, capacidade = ?, tipo_cama = ? WHERE ID = ?";
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setBigDecimal(1, preco);
+                    ps.setString(2, nome);
+                    ps.setInt(3, capacidade);
+                    ps.setString(4, tipoCama);
+                    ps.setInt(5, id);
+                    ps.executeUpdate();
+                    msgSucesso = "Categoria atualizada com sucesso!";
+                }
+            }
+
+        } catch (Exception e) {
+            request.setAttribute("erro", "Ocorreu um erro: " + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+            return;
+        }
+
+        request.setAttribute("msgSucesso", msgSucesso);
+        doGet(request, response);
     }
 }
