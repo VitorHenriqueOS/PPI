@@ -1,12 +1,15 @@
 package servelet;
 
 import db.Conector;
+import model.Limpa;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,141 +18,108 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/LimpaServlet")
 public class LimpaServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     @Override
-    public void init() {
-        System.out.println("Servlet iniciado!");
-    }
-
-    @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        response.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        String acao = request.getParameter("acao");
-
+        String buscaData = request.getParameter("buscaData");
+        String buscaQuarto = request.getParameter("buscaQuarto");
+        
+        List<Limpa> lista = new ArrayList<>();
+        
         try (Connection conn = new Conector().getConexao()) {
+            StringBuilder sql = new StringBuilder("SELECT * FROM Limpa WHERE 1=1");
+            List<Object> params = new ArrayList<>();
             
-            /* ================= CADASTRAR ================= */
-            if ("cadastrar".equals(acao)) {
-                String sql = "INSERT INTO Limpa (ID, data, obs, Numero, IDF) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setInt(1, Integer.parseInt(request.getParameter("idLimpa")));
-                ps.setDate(2, Date.valueOf(request.getParameter("data")));
-                ps.setString(3, request.getParameter("obs"));
-                ps.setInt(4, Integer.parseInt(request.getParameter("numero")));
-                ps.setInt(5, Integer.parseInt(request.getParameter("idFuncionario")));
-                
-                ps.executeUpdate();
-                out.print("{\"ok\":true}");
-                
-            /* ================= CONSULTAR ================= */
-            } else if ("consultar".equals(acao)) {
-                String dataStr = request.getParameter("data");
-                String numStr = request.getParameter("numero");
-                String idFuncStr = request.getParameter("idFuncionario");
-                
-                StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM Limpa WHERE 1=1");
-                
-                if (dataStr != null && !dataStr.trim().isEmpty()) {
-                    sqlBuilder.append(" AND data = ?");
-                }
-                if (numStr != null && !numStr.trim().isEmpty()) {
-                    sqlBuilder.append(" AND Numero = ?");
-                }
-                if (idFuncStr != null && !idFuncStr.trim().isEmpty()) {
-                    sqlBuilder.append(" AND IDF = ?");
-                }
-                
-                PreparedStatement ps = conn.prepareStatement(sqlBuilder.toString());
-                int index = 1;
-                
-                if (dataStr != null && !dataStr.trim().isEmpty()) {
-                    ps.setDate(index++, Date.valueOf(dataStr));
-                }
-                if (numStr != null && !numStr.trim().isEmpty()) {
-                    ps.setInt(index++, Integer.parseInt(numStr));
-                }
-                if (idFuncStr != null && !idFuncStr.trim().isEmpty()) {
-                    ps.setInt(index++, Integer.parseInt(idFuncStr));
-                }
-
-                ResultSet rs = ps.executeQuery();
-                
-                StringBuilder json = new StringBuilder();
-                json.append("[");
-                
-                boolean primeiro = true;
-                while (rs.next()) {
-                    if (!primeiro) json.append(",");
-                    primeiro = false;
-                    
-                    json.append("{");
-                    json.append("\"idLimpa\":").append(rs.getInt("ID")).append(",");
-                    json.append("\"data\":\"").append(rs.getDate("data")).append("\",");
-                    
-                    String obs = rs.getString("obs") != null ? rs.getString("obs").replace("\"", "'") : "";
-                    json.append("\"obs\":\"").append(obs).append("\",");
-                    
-                    json.append("\"numero\":").append(rs.getInt("Numero")).append(",");
-                    json.append("\"idFuncionario\":").append(rs.getInt("IDF"));
-                    json.append("}");
-                }
-                
-                json.append("]");
-                out.print(json.toString());
-
-            /* ================= ALTERAR ================= */
-            } else if ("alterar".equals(acao)) {
-                // CORREÇÃO: Usando ID na cláusula WHERE
-                String sql = "UPDATE Limpa SET obs = ?, data = ?, Numero = ?, IDF = ? WHERE ID = ?";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                
-                // Obs é o primeiro parâmetro
-                ps.setString(1, request.getParameter("obs"));
-                
-                // Atualiza também os outros campos caso tenham sido liberados no front, 
-                // mas o mais importante é o WHERE ID no final
-                ps.setDate(2, Date.valueOf(request.getParameter("data")));
-                ps.setInt(3, Integer.parseInt(request.getParameter("numero")));
-                ps.setInt(4, Integer.parseInt(request.getParameter("idFuncionario")));
-                
-                // O ID é usado para identificar qual linha alterar
-                ps.setInt(5, Integer.parseInt(request.getParameter("idLimpa")));
-                
-                int rows = ps.executeUpdate();
-                if(rows > 0) out.print("{\"ok\":true}");
-                else out.print("{\"erro\":\"Registro não encontrado para alteração (ID incorreto).\"}");
-                    
-            /* ================= REMOVER ================= */
-            } else if ("remover".equals(acao)) {
-                // CORREÇÃO: Usando ID na cláusula WHERE (muito mais seguro)
-                String sql = "DELETE FROM Limpa WHERE ID = ?";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setInt(1, Integer.parseInt(request.getParameter("idLimpa")));
-                
-                int rows = ps.executeUpdate();
-                if(rows > 0) out.print("{\"ok\":true}");
-                else out.print("{\"erro\":\"Registro não encontrado para remoção.\"}");
+            // CORREÇÃO: Utilizando PreparedStatement para garantir que a data seja interpretada corretamente pelo banco
+            if (buscaData != null && !buscaData.isEmpty()) {
+                sql.append(" AND data = ?");
+                params.add(Date.valueOf(buscaData));
             }
             
+            if (buscaQuarto != null && !buscaQuarto.isEmpty()) {
+                sql.append(" AND Numero = ?");
+                params.add(Integer.parseInt(buscaQuarto));
+            }
+
+            PreparedStatement ps = conn.prepareStatement(sql.toString());
+            
+            // Define os valores dos ?
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Limpa l = new Limpa();
+                l.setId(rs.getInt("ID"));
+                l.setData(rs.getDate("data"));
+                l.setObs(rs.getString("obs"));
+                l.setNumeroQuarto(rs.getInt("Numero"));
+                l.setIdFuncionario(rs.getInt("IDF"));
+                lista.add(l);
+            }
         } catch (Exception e) {
-            String msgErro = e.getMessage();
-            if (msgErro != null) {
-                if (msgErro.contains("foreign key")) {
-                    msgErro = "Não foi possível realizar a operação: Verifique se o Quarto e o Funcionário existem.";
-                } else if (msgErro.contains("Duplicate entry") || msgErro.contains("PRIMARY")) {
-                    msgErro = "Já existe um registro com este ID.";
-                }
-                msgErro = msgErro.replace("\"", "'");
-            }
-            out.print("{\"erro\":\"" + (msgErro != null ? msgErro : "Erro interno") + "\"}");
-            e.printStackTrace();
+            request.setAttribute("erro", "Erro: " + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+            return;
         }
+        
+        request.setAttribute("listaLimpeza", lista);
+        RequestDispatcher rd = request.getRequestDispatcher("/Limpa.jsp");
+        rd.forward(request, response);
     }
+
     @Override
-    public void destroy() {
-        System.out.println("Servlet finalizado!");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String acao = request.getParameter("acao");
+        String idStr = request.getParameter("id");
+        
+        try (Connection conn = new Conector().getConexao()) {
+            if ("remover".equals(acao)) {
+                PreparedStatement ps = conn.prepareStatement("DELETE FROM Limpa WHERE ID = ?");
+                ps.setInt(1, Integer.parseInt(idStr));
+                ps.executeUpdate();
+                request.setAttribute("msgSucesso", "Registro de limpeza removido!");
+            } else {
+                int id = Integer.parseInt(idStr);
+                Date data = Date.valueOf(request.getParameter("data"));
+                String obs = request.getParameter("obs");
+                int numero = Integer.parseInt(request.getParameter("numero"));
+                int idFunc = Integer.parseInt(request.getParameter("idFuncionario"));
+
+                if ("cadastrar".equals(acao)) {
+                    String sql = "INSERT INTO Limpa (ID, data, obs, Numero, IDF) VALUES (?, ?, ?, ?, ?)";
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setInt(1, id);
+                    ps.setDate(2, data);
+                    ps.setString(3, obs);
+                    ps.setInt(4, numero);
+                    ps.setInt(5, idFunc);
+                    ps.executeUpdate();
+                    request.setAttribute("msgSucesso", "Limpeza registrada!");
+                } else if ("alterar".equals(acao)) {
+                    String sql = "UPDATE Limpa SET data=?, obs=?, Numero=?, IDF=? WHERE ID=?";
+                    PreparedStatement ps = conn.prepareStatement(sql);
+                    ps.setDate(1, data);
+                    ps.setString(2, obs);
+                    ps.setInt(3, numero);
+                    ps.setInt(4, idFunc);
+                    ps.setInt(5, id);
+                    ps.executeUpdate();
+                    request.setAttribute("msgSucesso", "Registro atualizado!");
+                }
+            }
+        } catch (Exception e) {
+            request.setAttribute("erro", "Erro: " + e.getMessage());
+            request.getRequestDispatcher("erro.jsp").forward(request, response);
+            return;
+        }
+        doGet(request, response);
     }
 }

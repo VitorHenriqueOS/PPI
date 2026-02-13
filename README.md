@@ -5,6 +5,18 @@ Este projeto consiste em um sistema Web para o gerenciamento de operações hote
 
 ---
 
+## Tecnologias e Arquitetura
+
+O projeto segue o padrão MVC (Model-View-Controller) para garantir a separação de responsabilidades e facilitar a manutenção.
+
+* **Frontend:** HTML5, CSS3 e JSP para páginas dinâmicas.
+
+* **Backend:** Java Servlets (Java 8+).
+
+* **Banco de Dados:** MySQL com persistência via JDBC.
+
+---
+
 ## Modelagem do Banco de Dados
 
 O banco de dados foi modelado para suportar o fluxo principal de um hotel, desde a categorização dos quartos até a limpeza realizada pelos funcionários.
@@ -12,39 +24,44 @@ O banco de dados foi modelado para suportar o fluxo principal de um hotel, desde
 ![Modelagem do Banco de Dados](DiagramaER.png)
 
 ### Descrição das Entidades
-* **Hóspede:** Armazena as informações cadastrais dos clientes (CPF, Nome, Email, Telefone e Data de Nascimento).
-* **Quarto:**  Representa as unidades físicas (Número e Andar), o seu status de ocupação e a categoria à qual pertencem.
-* **Categoria:**  Define os tipos de quartos disponíveis, estabelecendo o preço, capacidade de pessoas e o tipo de cama.
-* **Reserva:** Entidade associativa que gerencia a estadia de um hóspede em um quarto específico.
-* **Funcionário:** Gerencia os dados dos colaboradores e os registros de limpeza dos quartos.
+* **Hóspede:** Gestão de clientes com controlo de estado (Ativo/Inativo).
+* **Quarto:** Unidades físicas vinculadas a categorias específicas.
+* **Categoria:** Define o preço, capacidade e tipo de cama dos quartos.
+* **Reserva:** Gerencia a estadia, garantindo que não haja sobreposição de datas.
+* **Funcionário:** Registro de manutenção realizado por funcionários.
 
 ---
 
-## Requisitos do Projeto
+### Funcionalidades
+1. Gestão de Reservas
+* **Validação de Usuário:** Apenas hóspedes com status "Ativo" podem realizar novas reservas. Hóspedes inativos mantêm o acesso apenas ao histórico.
 
-O projeto atende aos seguintes critérios obrigatórios:
+* **Conflito de Datas:** O sistema impede automaticamente reservas no mesmo quarto para períodos que se sobreponham.
 
-### Tecnologias Utilizadas
-* **Frontend:** HTML5 e CSS3.
-* **Backend:** Java Servlets.
-* **Banco de Dados:** SQL (MySQL).
+2. Gestão de Quartos e Categorias
 
-### Estrutura de Dados
-* **4+ Tabelas:** Hóspede, Quarto, Categoria, Funcionário, Reserva.
-* **Relacionamentos:**
-    * Hóspede registra Reserva.
-    * Quarto pertence a uma Categoria.
-    * Funcionário limpa Quarto.
+* **Cadastro Integrado:** Ao criar ou reservar um quarto, os detalhes da categoria (preço, capacidade) são exibidos dinamicamente para auxiliar na seleção.
 
-### Funcionalidades (CRUD)
-O sistema permite realizar as seguintes operações para as entidades principais:
-1.  **Cadastro:** Inclusão de novos hóspedes, quartos e reservas.
-2.  **Consulta:** Listagem geral de quartos disponíveis ou busca específica de reservas por ID.
-3.  **Alteração:** Atualização de dados cadastrais de funcionários ou mudança de status de limpeza do quarto.
-4.  **Remoção:** Exclusão de registros de reservas ou cancelamento de cadastros.
+---
+
+## Estrutura do Projeto
+
+```
+src/main/java/
+├── db/          # Conexão com o banco de dados (JDBC)
+├── model/       # Classes de entidade 
+└── servelet/    # Controladores da lógica de negócio
+
+src/main/webapp/
+├── componentes/ # Fragmentos de interface (Header/Footer/Menu)
+├── WEB-INF/     # Configurações e bibliotecas
+└── *.jsp/html   # Telas do sistema
+```
 
 ---
 
 ## Status do Projeto
 O projeto encontra-se em fase inicial de desenvolvimento. 
-*Nota: A modelagem e os requisitos podem sofrer alterações conforme o avanço da implementação.*
+*Nota: Este projeto foi desenvolvido como requisito avaliativo e segue em constante evolução.*
+
+
