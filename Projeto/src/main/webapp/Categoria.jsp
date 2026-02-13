@@ -83,6 +83,7 @@
 
     <h2 id="tituloForm">Nova Categoria</h2>
     
+<<<<<<< HEAD
     <%
             String msg = (String) request.getAttribute("mensagem");
             if (msg != null) {
@@ -93,6 +94,8 @@
             Categoria c = (Categoria) request.getAttribute("categoria");
         %>
         
+=======
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
     <form action="CategoriaServlet" method="post" id="formCategoria">
         <input type="hidden" name="acao" id="acao" value="cadastrar">
         <div style="display: flex; gap: 30px;">
@@ -109,6 +112,7 @@
                 <label>Capacidade:</label><br>
                 <input type="number" name="capacidade" id="capacidade" required><br><br>
 
+<<<<<<< HEAD
                 <label for="tipoCama">Tipo de Cama:</label>
             	<select id="tipoCama" name="tipoCama" required class="input-padrao">
 	                <option value="" disabled <%= (c == null || c.getTipoCama() == null) ? "selected" : "" %>>Selecione o tipo</option>
@@ -117,6 +121,10 @@
 	                <option value="Queen Size" <%= (c != null && "Queen Size".equals(c.getTipoCama())) ? "selected" : "" %>>Queen Size</option>
 	                <option value="King Size" <%= (c != null && "King Size".equals(c.getTipoCama())) ? "selected" : "" %>>King Size</option>
             	</select> <br><br>
+=======
+                <label>Tipo de Cama:</label><br>
+                <input type="text" name="tipoCama" id="tipoCama" required placeholder="Ex: Casal"><br><br>
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
             </div>
         </div>
 

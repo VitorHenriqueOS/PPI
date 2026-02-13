@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<<<<<<< HEAD
 <%@ page import="java.util.List, java.util.Map, model.Reserva, model.Quarto, model.Categoria" %>
 <%
     // Redireciona para o Servlet se os dados auxiliares não estiverem carregados
@@ -7,6 +8,9 @@
         return;
     }
 %>
+=======
+<%@ page import="java.util.List, model.Reserva" %>
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
 <!DOCTYPE html>
 <html lang="pt-BR">
 <jsp:include page="componentes/header.jsp" />
@@ -18,6 +22,7 @@
     <% String sucesso = (String) request.getAttribute("msgSucesso"); 
        if(sucesso!=null){ %> <div style="background:#d4edda;padding:10px;"><%=sucesso%></div> <% } %>
 
+<<<<<<< HEAD
     <% String erro = (String) request.getAttribute("erro"); 
        if(erro!=null){ %> <div style="background:#f8d7da;color:#721c24;padding:10px;"><%=erro%></div> <% } %>
 
@@ -36,6 +41,14 @@
                 <button type="submit">Filtrar</button>
                 <a href="ReservaServlet"><button type="button">Limpar</button></a>
             </div>
+=======
+    <div class="search-box">
+        <form action="ReservaServlet" method="get">
+            <label>ID Reserva:</label>
+            <input type="number" name="buscaId" value="<%= request.getParameter("buscaId")!=null?request.getParameter("buscaId"):"" %>">
+            <button type="submit">Filtrar</button>
+            <a href="ReservaServlet"><button type="button">Limpar</button></a>
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
         </form>
     </div>
 
@@ -64,6 +77,7 @@
     </table>
     <hr>
     <h2 id="tituloForm">Nova Reserva</h2>
+<<<<<<< HEAD
     
     <form action="ReservaServlet" method="post" id="formReserva">
         <input type="hidden" name="acao" id="acao" value="cadastrar">
@@ -158,6 +172,20 @@ function atualizarDetalhesQuarto() {
     card.style.display = "block";
 }
 
+=======
+    <form action="ReservaServlet" method="post" id="formReserva">
+        <input type="hidden" name="acao" id="acao" value="cadastrar">
+        <label>ID:</label><br><input type="number" name="id" id="id" required><br>
+        <label>Início:</label><br><input type="date" name="dataInicio" id="dataInicio" required><br>
+        <label>Fim:</label><br><input type="date" name="dataFim" id="dataFim" required><br>
+        <label>CPF:</label><br><input type="text" name="cpf" id="cpf" required><br>
+        <label>Quarto:</label><br><input type="number" name="numero" id="numero" required><br><br>
+        <button type="submit" id="btnSalvar">Salvar</button>
+        <button type="button" onclick="limpar()">Limpar</button>
+    </form>
+</div>
+<script>
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
 function prepararEdicao(id, ini, fim, cpf, num) {
     document.getElementById('tituloForm').innerText = 'Editando Reserva ' + id;
     document.getElementById('id').value = id;
@@ -168,6 +196,7 @@ function prepararEdicao(id, ini, fim, cpf, num) {
     document.getElementById('id').readOnly = true;
     document.getElementById('acao').value = 'alterar';
     document.getElementById('btnSalvar').innerText = 'Atualizar';
+<<<<<<< HEAD
     
     // Atualiza os detalhes visualmente para o item sendo editado
     atualizarDetalhesQuarto();
@@ -175,13 +204,20 @@ function prepararEdicao(id, ini, fim, cpf, num) {
 
 function limpar() {
     document.getElementById('tituloForm').innerText = 'Nova Reserva';
+=======
+}
+function limpar() {
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
     document.getElementById('formReserva').reset();
     document.getElementById('id').readOnly = false;
     document.getElementById('acao').value = 'cadastrar';
     document.getElementById('btnSalvar').innerText = 'Salvar';
+<<<<<<< HEAD
     
     // Esconde o card
     document.getElementById("cardDetalhes").style.display = "none";
+=======
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
 }
 </script>
 </body>

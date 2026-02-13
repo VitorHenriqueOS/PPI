@@ -50,6 +50,7 @@
     </table>
     <hr>
     <h2 id="tituloForm">Novo Funcionário</h2>
+<<<<<<< HEAD
     <%
             String msg = (String) request.getAttribute("mensagem");
             if (msg != null) {
@@ -59,10 +60,13 @@
             }
             Funcionario f = (Funcionario) request.getAttribute("funcionario");
         %>
+=======
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
     <form action="FuncionarioServlet" method="post" id="formFunc">
         <input type="hidden" name="acao" id="acao" value="cadastrar">
         <label>ID:</label><br> <input type="number" name="id" id="id" required><br><br>
         <label>Nome:</label><br> <input type="text" name="nome" id="nome" required><br><br>
+<<<<<<< HEAD
         <label for="turno">Turno:</label>
             <select id="turno" name="turno" required class="input-padrao">
                 <option value="" disabled <%= (f == null || f.getTurno() == null) ? "selected" : "" %>>Selecione um turno</option>
@@ -72,6 +76,9 @@
                 <option value="Madrugada" <%= (f != null && "Madrugada".equals(f.getTurno())) ? "selected" : "" %>>Madrugada</option>
             </select>
             <br> <br>
+=======
+        <label>Turno:</label><br> <input type="text" name="turno" id="turno" required><br><br>
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
         <button type="submit" id="btnSalvar">Salvar</button>
         <button type="button" onclick="limparFormulario()">Limpar</button>
     </form>

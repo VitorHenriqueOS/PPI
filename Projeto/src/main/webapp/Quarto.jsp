@@ -84,8 +84,12 @@
     <form action="QuartoServlet" method="post" id="formQuarto">
         
         <input type="hidden" name="acao" id="acao" value="cadastrar">
+<<<<<<< HEAD
         <div style="display: flex; gap: 30px; align-items: flex-start;">
             
+=======
+        <div style="display: flex; gap: 30px;">
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
             <div style="flex: 1;">
                 <label>Número (ID):</label><br>
                 <input type="number" name="numero" id="numero" required><br><br>
@@ -97,19 +101,27 @@
                 <input type="text" name="status" id="status" required placeholder="Ex: Disponível"><br><br>
 
                 <label>Categoria:</label><br>
+<<<<<<< HEAD
                 <select name="idCategoria" id="idCategoria" required style="padding: 5px; min-width: 200px;" onchange="atualizarDetalhesCategoria()">
+=======
+                <select name="idCategoria" id="idCategoria" required style="padding: 5px; min-width: 200px;">
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                     <option value="">Selecione uma Categoria...</option>
                     <% 
                         List<Categoria> categorias = (List<Categoria>) request.getAttribute("listaCategorias");
                         if (categorias != null) {
                             for (Categoria cat : categorias) {
                     %>
+<<<<<<< HEAD
                         <option value="<%= cat.getId() %>"
                                 data-preco="<%= cat.getPreco() %>"
                                 data-capacidade="<%= cat.getCapacidade() %>"
                                 data-cama="<%= cat.getTipoCama() %>">
                             <%= cat.getNome() %>
                         </option>
+=======
+                        <option value="<%= cat.getId() %>"><%= cat.getNome() %></option>
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                     <% 
                             }
                         }
@@ -117,6 +129,7 @@
                 </select>
                 <br><br>
             </div>
+<<<<<<< HEAD
 
             <div id="cardDetalhes" style="flex: 1; border: 1px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 5px; display: none;">
                 <h3 style="margin-top: 0;">Detalhes da Categoria</h3>
@@ -124,6 +137,8 @@
                 <p><strong>Capacidade:</strong> <span id="detalheCapacidade">-</span> pessoas</p>
                 <p><strong>Tipo de Cama:</strong> <span id="detalheCama">-</span></p>
             </div>
+=======
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
         </div>
 
         <div style="margin-top: 20px;">
@@ -134,6 +149,7 @@
 </div>
 
 <script>
+<<<<<<< HEAD
     // Nova função para atualizar o card visualmente
     function atualizarDetalhesCategoria() {
         var select = document.getElementById("idCategoria");
@@ -162,11 +178,14 @@
         card.style.display = "block";
     }
 
+=======
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
     function prepararEdicao(numero, andar, status, idCategoria) {
         document.getElementById('tituloForm').innerText = 'Editando Quarto: ' + numero;
         document.getElementById('numero').value = numero;
         document.getElementById('andar').value = andar;
         document.getElementById('status').value = status;
+<<<<<<< HEAD
         document.getElementById('idCategoria').value = idCategoria;
         
         document.getElementById('numero').readOnly = true;
@@ -175,6 +194,16 @@
 
         // ALTERAÇÃO: Chama a função para mostrar os detalhes da categoria do quarto sendo editado
         atualizarDetalhesCategoria();
+=======
+        
+        // O select será ajustado automaticamente se houver um option com esse value (ID)
+        document.getElementById('idCategoria').value = idCategoria;
+        
+        // O número é a chave primária, não deve mudar na edição
+        document.getElementById('numero').readOnly = true;
+        document.getElementById('acao').value = 'alterar';
+        document.getElementById('btnSalvar').innerText = 'Atualizar';
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
     }
 
     function limparFormulario() {
@@ -182,11 +211,17 @@
         document.getElementById('formQuarto').reset();
         
         document.getElementById('numero').readOnly = false;
+<<<<<<< HEAD
         document.getElementById('acao').value = 'cadastrar';
         document.getElementById('btnSalvar').innerText = 'Salvar';
 
         // Esconde o card ao limpar
         document.getElementById("cardDetalhes").style.display = "none";
+=======
+        
+        document.getElementById('acao').value = 'cadastrar';
+        document.getElementById('btnSalvar').innerText = 'Salvar';
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
     }
 </script>
 </body>

@@ -24,6 +24,10 @@ public class LimpaServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+<<<<<<< HEAD
+=======
+        // Filtros opcionais conforme HTML original
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
         String buscaData = request.getParameter("buscaData");
         String buscaQuarto = request.getParameter("buscaQuarto");
         
@@ -31,14 +35,27 @@ public class LimpaServlet extends HttpServlet {
         
         try (Connection conn = new Conector().getConexao()) {
             StringBuilder sql = new StringBuilder("SELECT * FROM Limpa WHERE 1=1");
+<<<<<<< HEAD
             List<Object> params = new ArrayList<>();
             
             // CORREÇÃO: Utilizando PreparedStatement para garantir que a data seja interpretada corretamente pelo banco
             if (buscaData != null && !buscaData.isEmpty()) {
                 sql.append(" AND data = ?");
                 params.add(Date.valueOf(buscaData));
-            }
+=======
             
+            if (buscaData != null && !buscaData.isEmpty()) {
+                sql.append(" AND data = '").append(buscaData).append("'");
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
+            }
+            if (buscaQuarto != null && !buscaQuarto.isEmpty()) {
+                sql.append(" AND Numero = ").append(buscaQuarto);
+            }
+
+            PreparedStatement ps = conn.prepareStatement(sql.toString());
+            ResultSet rs = ps.executeQuery();
+            
+<<<<<<< HEAD
             if (buscaQuarto != null && !buscaQuarto.isEmpty()) {
                 sql.append(" AND Numero = ?");
                 params.add(Integer.parseInt(buscaQuarto));
@@ -53,6 +70,8 @@ public class LimpaServlet extends HttpServlet {
 
             ResultSet rs = ps.executeQuery();
             
+=======
+>>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
             while (rs.next()) {
                 Limpa l = new Limpa();
                 l.setId(rs.getInt("ID"));
