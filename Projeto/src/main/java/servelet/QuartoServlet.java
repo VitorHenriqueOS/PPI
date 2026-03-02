@@ -40,31 +40,18 @@ public class QuartoServlet extends HttpServlet {
                 Categoria c = new Categoria();
                 c.setId(rsCat.getInt("id"));
                 c.setNome(rsCat.getString("nome"));
-<<<<<<< HEAD
                 // ALTERAÇÃO: Populando os demais campos para uso no Frontend
                 c.setPreco(rsCat.getBigDecimal("preco"));
                 c.setCapacidade(rsCat.getInt("capacidade"));
                 c.setTipoCama(rsCat.getString("tipo_cama"));
                 
-=======
-                // Preencha outros campos se necessário, mas ID e Nome bastam aqui
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                 listaCategorias.add(c);
             }
             
             // 2. Buscar Quartos com JOIN para pegar o Nome da Categoria
-<<<<<<< HEAD
             StringBuilder query = new StringBuilder("SELECT q.*, c.nome AS nomeCategoria FROM Quarto q INNER JOIN Categoria c ON q.ID = c.id");
             PreparedStatement ps;
             
-=======
-            String sql;
-            PreparedStatement ps;
-            
-            // Nota: Usamos 'c.nome AS nomeCategoria' para evitar conflito de nomes
-            StringBuilder query = new StringBuilder("SELECT q.*, c.nome AS nomeCategoria FROM Quarto q INNER JOIN Categoria c ON q.ID = c.id");
-            
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
             if (buscaNumero != null && !buscaNumero.trim().isEmpty()) {
                 query.append(" WHERE q.Numero = ?");
                 ps = conn.prepareStatement(query.toString());
@@ -79,13 +66,8 @@ public class QuartoServlet extends HttpServlet {
                 q.setNumero(rs.getInt("Numero"));
                 q.setAndar(rs.getInt("andar"));
                 q.setStatus(rs.getString("status"));
-<<<<<<< HEAD
                 q.setIdCategoria(rs.getInt("ID")); 
                 q.setNomeCategoria(rs.getString("nomeCategoria"));
-=======
-                q.setIdCategoria(rs.getInt("ID")); // Mantemos o ID para a lógica de edição/fundo
-                q.setNomeCategoria(rs.getString("nomeCategoria")); // Setamos o nome para exibição
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                 listaQuartos.add(q);
             }
             
@@ -96,21 +78,13 @@ public class QuartoServlet extends HttpServlet {
             }
             
         } catch (Exception e) {
-<<<<<<< HEAD
             e.printStackTrace();
-=======
-            e.printStackTrace(); // Bom para debug no console
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
             request.setAttribute("erro", "Erro de conexão: " + e.getMessage());
             request.getRequestDispatcher("erro.jsp").forward(request, response);
             return;
         }
         
-<<<<<<< HEAD
         request.setAttribute("listaCategorias", listaCategorias);
-=======
-        request.setAttribute("listaCategorias", listaCategorias); // Enviando lista para o select
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
         request.setAttribute("listaQuartos", listaQuartos);
         RequestDispatcher rd = request.getRequestDispatcher("/Quarto.jsp");
         rd.forward(request, response);
@@ -140,10 +114,6 @@ public class QuartoServlet extends HttpServlet {
                 msgSucesso = "Quarto removido com sucesso!";
                 
             } else {
-<<<<<<< HEAD
-=======
-                // Validações
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                 if (numeroStr == null || numeroStr.isEmpty()) {
                     throw new Exception("Número do quarto é obrigatório.");
                 }
@@ -176,30 +146,15 @@ public class QuartoServlet extends HttpServlet {
 
         } catch (Exception e) {
             String errorMsg = e.getMessage();
-<<<<<<< HEAD
             if (errorMsg != null && errorMsg.contains("foreign key constraint fails")) {
-                errorMsg = "A Categoria informada não existe! Verifique o ID.";
+                errorMsg = "Existem Reservas para este quarto, quarto não pode ser excluido";
             }
-=======
-            
-            // Regra de negócio: Tratamento específico para Chave Estrangeira (Categoria)
-            if (errorMsg != null && errorMsg.contains("foreign key constraint fails")) {
-                errorMsg = "A Categoria informada não existe! Verifique o ID.";
-            }
-            
-            // Redireciona para a página de erro
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
             request.setAttribute("erro", "Ocorreu um erro: " + errorMsg);
             request.getRequestDispatcher("erro.jsp").forward(request, response);
             return;
         }
 
         request.setAttribute("msgSucesso", msgSucesso);
-<<<<<<< HEAD
-=======
-        
-        // Recarrega a lista chamando o método doGet
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
         doGet(request, response);
     }
 }

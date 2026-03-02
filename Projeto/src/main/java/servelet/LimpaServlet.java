@@ -2,6 +2,7 @@ package servelet;
 
 import db.Conector;
 import model.Limpa;
+import model.Quarto; // Importação necessária para a lista de quartos
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
@@ -24,54 +25,33 @@ public class LimpaServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-<<<<<<< HEAD
-=======
-        // Filtros opcionais conforme HTML original
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
         String buscaData = request.getParameter("buscaData");
         String buscaQuarto = request.getParameter("buscaQuarto");
         
         List<Limpa> lista = new ArrayList<>();
+        List<Quarto> listaQuartos = new ArrayList<>(); // Nova lista para o select
         
         try (Connection conn = new Conector().getConexao()) {
+            // 1. Busca dos registros de limpeza (com filtros)
             StringBuilder sql = new StringBuilder("SELECT * FROM Limpa WHERE 1=1");
-<<<<<<< HEAD
             List<Object> params = new ArrayList<>();
             
-            // CORREÇÃO: Utilizando PreparedStatement para garantir que a data seja interpretada corretamente pelo banco
             if (buscaData != null && !buscaData.isEmpty()) {
                 sql.append(" AND data = ?");
                 params.add(Date.valueOf(buscaData));
-=======
-            
-            if (buscaData != null && !buscaData.isEmpty()) {
-                sql.append(" AND data = '").append(buscaData).append("'");
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
             }
-            if (buscaQuarto != null && !buscaQuarto.isEmpty()) {
-                sql.append(" AND Numero = ").append(buscaQuarto);
-            }
-
-            PreparedStatement ps = conn.prepareStatement(sql.toString());
-            ResultSet rs = ps.executeQuery();
             
-<<<<<<< HEAD
             if (buscaQuarto != null && !buscaQuarto.isEmpty()) {
                 sql.append(" AND Numero = ?");
                 params.add(Integer.parseInt(buscaQuarto));
             }
 
             PreparedStatement ps = conn.prepareStatement(sql.toString());
-            
-            // Define os valores dos ?
             for (int i = 0; i < params.size(); i++) {
                 ps.setObject(i + 1, params.get(i));
             }
 
             ResultSet rs = ps.executeQuery();
-            
-=======
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
             while (rs.next()) {
                 Limpa l = new Limpa();
                 l.setId(rs.getInt("ID"));
@@ -81,13 +61,27 @@ public class LimpaServlet extends HttpServlet {
                 l.setIdFuncionario(rs.getInt("IDF"));
                 lista.add(l);
             }
+
+            // 2. Busca de todos os quartos para popular o formulário
+            String sqlQuartos = "SELECT * FROM Quarto ORDER BY Numero";
+            PreparedStatement psQ = conn.prepareStatement(sqlQuartos);
+            ResultSet rsQ = psQ.executeQuery();
+            while (rsQ.next()) {
+                Quarto q = new Quarto();
+                q.setNumero(rsQ.getInt("Numero"));
+                q.setAndar(rsQ.getInt("andar"));
+                listaQuartos.add(q);
+            }
+
         } catch (Exception e) {
             request.setAttribute("erro", "Erro: " + e.getMessage());
             request.getRequestDispatcher("erro.jsp").forward(request, response);
             return;
         }
         
+        // Atribui ambas as listas para a requisição
         request.setAttribute("listaLimpeza", lista);
+        request.setAttribute("listaQuartos", listaQuartos); // Atributo novo
         RequestDispatcher rd = request.getRequestDispatcher("/Limpa.jsp");
         rd.forward(request, response);
     }

@@ -42,11 +42,11 @@
         <p>Use o menu acima ou os links abaixo para navegar:</p>
 
         <ul>
-            <li><a class="botao-menu" href="Categoria.jsp">Cadastro de Categoria</a></li>
-            <li><a class="botao-menu" href="Funcionario.jsp">Cadastro de Funcionário</a></li>
-            <li><a class="botao-menu" href="Hospede.jsp">Cadastro de Hóspede</a></li>
+            <li><a class="botao-menu" href="Categoria.jsp">Gerenciamento de Categoria</a></li>
+            <li><a class="botao-menu" href="Funcionario.jsp">Gerenciamento de Funcionário</a></li>
+            <li><a class="botao-menu" href="Hospede.jsp">Gerenciamento de Hóspede</a></li>
             <li><a class="botao-menu" href="Limpa.jsp">Gerenciamento de Limpeza</a></li>
-            <li><a class="botao-menu" href="Quarto.jsp">Cadastro de Quarto</a></li>
+            <li><a class="botao-menu" href="Quarto.jsp">Gerenciamento de Quarto</a></li>
             <li><a class="botao-menu" href="Reserva.jsp">Gerenciamento de Reserva</a></li>
         </ul>
     </div>

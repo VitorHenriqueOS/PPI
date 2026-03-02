@@ -29,7 +29,6 @@ public class FuncionarioServlet extends HttpServlet {
             String sql;
             PreparedStatement ps;
             if (buscaId != null && !buscaId.trim().isEmpty()) {
-<<<<<<< HEAD
                 // ALTERAÇÃO: Filtra por ativo
                 sql = "SELECT * FROM Funcionario WHERE ID = ? AND Ativo = true";
                 ps = conn.prepareStatement(sql);
@@ -37,13 +36,6 @@ public class FuncionarioServlet extends HttpServlet {
             } else {
                 // ALTERAÇÃO: Filtra por ativo
                 sql = "SELECT * FROM Funcionario WHERE Ativo = true";
-=======
-                sql = "SELECT * FROM Funcionario WHERE ID = ?";
-                ps = conn.prepareStatement(sql);
-                ps.setInt(1, Integer.parseInt(buscaId));
-            } else {
-                sql = "SELECT * FROM Funcionario";
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                 ps = conn.prepareStatement(sql);
             }
             ResultSet rs = ps.executeQuery();
@@ -52,18 +44,11 @@ public class FuncionarioServlet extends HttpServlet {
                 f.setId(rs.getInt("ID"));
                 f.setNome(rs.getString("Nome"));
                 f.setTurno(rs.getString("Turno"));
-<<<<<<< HEAD
                 f.setAtivo(rs.getBoolean("Ativo")); // Mapeia ativo
                 lista.add(f);
             }
             if (buscaId != null && !buscaId.isEmpty() && lista.isEmpty()) {
                 request.setAttribute("erro", "Nenhum funcionário ativo encontrado com ID: " + buscaId);
-=======
-                lista.add(f);
-            }
-            if (buscaId != null && !buscaId.isEmpty() && lista.isEmpty()) {
-                request.setAttribute("erro", "Nenhum funcionário encontrado com ID: " + buscaId);
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                 request.getRequestDispatcher("erro.jsp").forward(request, response);
                 return;
             }
@@ -90,12 +75,8 @@ public class FuncionarioServlet extends HttpServlet {
 
         try (Connection conn = new Conector().getConexao()) {
             if ("remover".equals(acao)) {
-<<<<<<< HEAD
                 // ALTERAÇÃO: Soft Delete
                 String sql = "UPDATE Funcionario SET Ativo = false WHERE ID = ?";
-=======
-                String sql = "DELETE FROM Funcionario WHERE ID = ?";
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setInt(1, Integer.parseInt(idStr));
                 ps.executeUpdate();
@@ -103,20 +84,13 @@ public class FuncionarioServlet extends HttpServlet {
             } else {
                 int id = Integer.parseInt(idStr);
                 if ("cadastrar".equals(acao)) {
-<<<<<<< HEAD
                     // ALTERAÇÃO: Insert com Ativo = true
                     String sql = "INSERT INTO Funcionario (ID, Nome, Turno, Ativo) VALUES (?, ?, ?, ?)";
-=======
-                    String sql = "INSERT INTO Funcionario (ID, Nome, Turno) VALUES (?, ?, ?)";
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                     PreparedStatement ps = conn.prepareStatement(sql);
                     ps.setInt(1, id);
                     ps.setString(2, nome);
                     ps.setString(3, turno);
-<<<<<<< HEAD
                     ps.setBoolean(4, true); // Padrão ativo
-=======
->>>>>>> 462dee34ddf02cabdd4d76dbd8a9eed41cac3b14
                     ps.executeUpdate();
                     msgSucesso = "Funcionário cadastrado!";
                 } else if ("alterar".equals(acao)) {
@@ -130,7 +104,13 @@ public class FuncionarioServlet extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            request.setAttribute("erro", "Erro: " + e.getMessage());
+        	String msgErro = e.getMessage();
+        	if (msgErro != null && msgErro.contains("Duplicate entry")){
+            	msgErro = "ID já está em uso";
+            } else {
+                 msgErro = "Ocorreu um erro: " + msgErro;
+            }
+            request.setAttribute("erro", "Erro: " + msgErro);
             request.getRequestDispatcher("erro.jsp").forward(request, response);
             return;
         }

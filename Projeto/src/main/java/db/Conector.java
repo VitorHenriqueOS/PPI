@@ -9,7 +9,7 @@ public class Conector {
 static String dbname = "ppi";
 static String uname = "root";
 static String pword = "8003";
-static String url = "jdbc:mysql://localhost:3306/" + dbname + "?useSSL=false&useTimezone=true&serverTimezone=UTC";
+static String url = "jdbc:mysql://localhost:3306/" + dbname + "?useSSL=false&useTimezone=true&serverTimezone=America/Sao_Paulo";
 
 public Connection getConexao() {
 	try {

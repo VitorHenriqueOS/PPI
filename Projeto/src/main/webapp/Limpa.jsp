@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List, model.Limpa" %>
+<%@ page import="java.util.List, model.Limpa, model.Quarto" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <jsp:include page="componentes/header.jsp" />
@@ -49,9 +49,27 @@
         <input type="hidden" name="acao" id="acao" value="cadastrar">
         <label>ID:</label><br><input type="number" name="id" id="id" required><br>
         <label>Data:</label><br><input type="date" name="data" id="data" required><br>
-        <label>Quarto:</label><br><input type="number" name="numero" id="numero" required><br>
+        <label>Quarto:</label><br>
+			<select type="number" name="numero" id="numero" required style="padding: 5px; min-width: 200px;">
+    		<option value="">Selecione um Quarto...</option>
+    		<%
+        		List<Quarto> listaQ = (List<Quarto>) request.getAttribute("listaQuartos");
+        		if (listaQ != null) {
+            		for (Quarto q : listaQ) {
+    		%>
+        	<option value="<%= q.getNumero() %>">
+            	Quarto <%= q.getNumero() %> (Andar <%= q.getAndar() %>)
+        	</option>
+    		<%
+            		}
+        		}
+    		%>
+		</select><br>     
+        
         <label>Funcionario ID:</label><br><input type="number" name="idFuncionario" id="idFuncionario" required><br>
         <label>Obs:</label><br><input type="text" name="obs" id="obs" required><br><br>
+        
+        
         <button type="submit" id="btnSalvar">Salvar</button>
         <button type="button" onclick="limpar()">Limpar</button>
     </form>
